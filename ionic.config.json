@@ -1,0 +1,7 @@
+{
+  "name": "sicop",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
