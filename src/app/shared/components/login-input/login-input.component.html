@@ -4,9 +4,10 @@
   [type]="vt_type"
   [autocomplete]="vt_auto_complete"
   [label] = "vt_label"
+  [formControl] = "control"
   label-placement="floating"
   ></ion-input>
-  <ion-button fill="clear" shape="round">
-    <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+  <ion-button *ngIf="vb_is_password" (click)="mostrar_ocultar_pass()" slot="end" fill="clear" shape="round">
+    <ion-icon slot="icon-only" [name]="vb_hide ? 'eye-outline' : 'eye-off-outline'"></ion-icon>
   </ion-button>
 </ion-item>
