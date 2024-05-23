@@ -1,0 +1,12 @@
+<ion-item class="custom-imput" lines="none">
+  <ion-icon *ngIf="vt_icon" slot="start" color="primary" [name]="vt_icon"></ion-icon>
+  <ion-input
+  [type]="vt_type"
+  [autocomplete]="vt_auto_complete"
+  [label] = "vt_label"
+  label-placement="floating"
+  ></ion-input>
+  <ion-button fill="clear" shape="round">
+    <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+  </ion-button>
+</ion-item>
