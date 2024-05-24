@@ -48,6 +48,7 @@ export class AuthPage implements OnInit {
     }
   }
 
+  //obtiene la informacion del usuario logueado
   async getUserInfo(uid: string) {
     if (this.form.valid) {
       const loading = await this.utilService.loading();
@@ -56,11 +57,13 @@ export class AuthPage implements OnInit {
       const path = `t_usuarios/${uid}`;
 
       this.firebaseService.getDocument(path)
-        .then((user: administrator | undefined) => {
+        .then((user: User | undefined) => {
           if (user) {
             this.utilService.saveLocalStorage('user', user);
             this.utilService.routerlink('main/home');
             this.form.reset();
+
+            console.log('ID del usuario logueado',user.cn_id_usuario);
 
             this.utilService.presentToast({
               message: `Bienvenido ${user.ct_nombre}`,

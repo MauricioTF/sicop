@@ -1,5 +1,6 @@
 //exportamos nuestra interfaz
 export interface Incidencia{
+    uid: string,
     cn_id_incidencia: number,
     cn_id_usuario: number,
     cn_id_estado: number,
@@ -8,6 +9,7 @@ export interface Incidencia{
     cn_id_prioridad: number,
     cn_id_categoria: number,
     ct_id_img: string,
+    ct_titulo: string,
     cf_fecha_hora: Date
     ct_descripcion: string,
     ct_lugar: string,

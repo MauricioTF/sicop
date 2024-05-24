@@ -4,6 +4,32 @@
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="ion-padding ion-text-center" class="auth-form" (keypress.enter)="submit()">
 
+      <!-- ------------------------Boton para agregar imagen-------------------------- -->
+
+      <ion-avatar *ngIf="form.value.ct_id_img">
+        <img [src]="form.value.ct_id_img" />
+      </ion-avatar>
+
+      <ion-icon class="img-icon" *ngIf="!form.value.ct_id_img" name="image-outline"></ion-icon>
+
+      <ion-button (click)="takeImage()" mode="ios" size="small" shape="round">
+        tomar/seleccionar foto
+      </ion-button>
+
+      <!-- -----------------------Titulo---------------------------------- -->
+      <app-login-input 
+      vt_auto_complete="ct_titulo"
+      vt_type="text"
+      vt_label="Titulo"
+      [control]="form.controls.ct_titulo"
+      >
+      </app-login-input>
+
+      <div class="validators" *ngIf="form.controls.ct_titulo.errors && form.controls.ct_titulo.touched">
+        <div *ngIf="form.controls.ct_titulo.errors?.['required']">Es necesari un titulo para el incidente</div>
+      </div>
+
+
       <!-- -----------------------Descripcion---------------------------------- -->
       <app-login-input 
       vt_auto_complete="ct_descripcion"
