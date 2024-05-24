@@ -6,6 +6,7 @@ import { LogoComponent } from './components/logo/logo.component';
 import { UpdateAdministratorComponent } from './components/update-administrator/update-administrator.component';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActualizarIncidenciaComponent } from './components/actualizar-incidencia/actualizar-incidencia.component';
 
 
 
@@ -14,13 +15,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HeadersComponent,
     LoginInputComponent,
     LogoComponent,
-    UpdateAdministratorComponent
+    UpdateAdministratorComponent,
+    ActualizarIncidenciaComponent
   ],
   exports: [
     HeadersComponent,
     LoginInputComponent,
     LogoComponent,
     UpdateAdministratorComponent,
+    ActualizarIncidenciaComponent,
     IonicModule,
     FormsModule,
     ReactiveFormsModule

@@ -1,5 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from 'src/app/models/user.model';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-main',
@@ -10,6 +13,8 @@ export class MainPage implements OnInit {
 
    //para no usar el constructor
    router = inject(Router);
+   firebaseService = inject(FirebaseService);
+   utilService = inject(UtilsService);
    //me indica hacia donde estoy navegando
    currentPath: string = '';
  
@@ -28,4 +33,15 @@ export class MainPage implements OnInit {
      })
      console.log(this.pages)
    }
+
+   //cierra sesion
+   signOut(){
+    this.firebaseService.signOut();
+   }
+
+  //obtiene datos del usuario del local storage
+  user(): User{
+
+    return this.utilService.getLocalStorage('user');
+  }
 }

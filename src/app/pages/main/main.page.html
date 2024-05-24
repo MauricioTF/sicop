@@ -7,7 +7,7 @@
   <ion-avatar>
     <ion-icon class="empty-icon" name="person-circle-outline"></ion-icon>
   </ion-avatar>
-  <h5>Nombre Usuario</h5>
+  <h5>{{user()?.ct_nombre}}</h5>
 
 
   <ion-menu-toggle autoHide="false" *ngFor="let p of pages">
@@ -22,6 +22,19 @@
     </ion-item>
   </ion-menu-toggle>
 </ion-content>
+
+<ion-footer class="ion-no-border safe-p-bottom">
+  <ion-toolbar auto-hide="false">
+    <ion-item>
+      <ion-item (click)="signOut()" lines="none">
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        <ion-label>
+          Cerrar sesión
+        </ion-label>
+      </ion-item>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>
 
 </ion-menu>
 

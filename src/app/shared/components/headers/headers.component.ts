@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, input } from '@angular/core';
+import { Component, Input, OnInit, inject, input } from '@angular/core';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-headers',
@@ -12,9 +13,15 @@ export class HeadersComponent  implements OnInit {
   @Input() vt_title!: string;//enviamos este titulo, se recibe en el html de headers y el valor 
                             //se le otorga en el html de main o en algun hijo
   @Input() vb_show_menu!: boolean;
-
-  constructor() { }
+  @Input() vb_isModal: boolean;
+  
+  utilService = inject(UtilsService);
 
   ngOnInit() {}
+
+  dismissModal(){
+
+    this.utilService.dismissModal();
+  }
 
 }
