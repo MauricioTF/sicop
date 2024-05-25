@@ -1,20 +1,26 @@
 <app-headers [vb_show_menu]="true" vt_title="Pagina principal"> </app-headers>
  
 <ion-content>
-  <ion-list>
-    <ion-item-sliding class="product-item">
+
+  <!-- ------------------------Para refrescar pantalla --------------------------------->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Si no está cargando el loading van a aparecer todos los datos -->
+  <ion-list *ngIf="!loading">
+    <!-- Para mostrar todos los item -->
+    <ion-item-sliding class="product-item" *ngFor="let incidencia of incidencia">
       <ion-item>
         <ion-avatar slot="start">
-          <img src="../../../../assets/logo_sicop.png" alt="">
-          <ion-icon name="person-circle-outline"></ion-icon>
+          <img [src]="incidencia.ct_id_img" alt="">
         </ion-avatar>
           <ion-label>
-            <div class="name">Mauricio</div>
+            <div class="name">{{incidencia.ct_titulo}}</div>
             <div class="data">
-              <strong>Salario:</strong>{{'2000' | currency: 'CRC'}}
-              <strong>Puesto:</strong>{{'Administrador'}}
-              <strong>Correo:</strong>{{'mautf99@gmail.com'}}
-
+              <strong>Lugar:</strong>{{incidencia.ct_lugar}}
+              <strong>Descripcion:</strong>{{incidencia.ct_descripcion}}
+              <strong>usuario:</strong>{{incidencia.cn_id_usuario}}
             </div>
           </ion-label>
       </ion-item>
@@ -32,6 +38,33 @@
     </ion-item-sliding>
   </ion-list>
 
+  <!-- -------------------------Para cuando los datos están cargando (es solo una animacion) ------------------->
+  <ion-list *ngIf="loading">
+    <!-- Para mostrar todos los item -->
+    <ion-item-sliding class="product-item" *ngFor="let incidencia of [1,1,1,1,1,1,1]">
+      <ion-item>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated style="width: 100%; height : 100%"></ion-skeleton-text>
+        </ion-avatar>
+          <ion-label>
+            <div>
+              <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+            </div>
+          </ion-label>
+      </ion-item>
+
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- ---------------------------------------- Para cuandno no hay incidencias   ------------------------ -->
+  
+  <div class="empty" *ngIf="!loading && !incidencia.length">
+    <ion-icon name="sunny"></ion-icon>
+    <h3>No hay incidencias reportadas</h3>
+  </div>
+
+  <!---------------------- boton para agregar incidencia ----------------------------  -->
   <ion-fab vertical="bottom" horizontal="center" slot="fixed">
     <ion-fab-button (click)="addUpdateIncident()">
       <ion-icon name="add"></ion-icon>

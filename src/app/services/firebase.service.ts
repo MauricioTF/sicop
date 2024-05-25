@@ -1,8 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { User } from '../models/user.model';
+import { Incidencia } from '../models/incidencia.model';
+
 import { addDoc, collection, doc, getDoc, getFirestore } from '@angular/fire/firestore';
 import { UtilsService } from './utils.service';
 import {getDownloadURL, getStorage, ref, uploadString} from 'firebase/storage'
@@ -15,6 +17,7 @@ export class FirebaseService {
   auth = inject(AngularFireAuth);
   firestore = inject(AngularFirestore);
   utilsService = inject(UtilsService);
+  dataRef : AngularFirestoreCollection<Incidencia>;//obtiene los datos de la bd
 
   getAuth() {
     return getAuth();
@@ -58,5 +61,11 @@ export class FirebaseService {
     .then(() => {
       return getDownloadURL(ref(getStorage(), path))
     })
+  }
+
+  //Obtiene los datos de incidencias de la bd
+  getCollectionData(path: any): AngularFirestoreCollection<Incidencia>{
+    this.dataRef = this.firestore.collection(path, ref => ref.orderBy('ct_titulo', 'desc'))
+    return this.dataRef;
   }
 }

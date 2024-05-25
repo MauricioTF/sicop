@@ -1,5 +1,6 @@
 //exportamos nuestra interfaz
 export interface User{
+    uid: string,
     cn_id_usuario: number,
     cn_id_pantalla: number,
     cn_id_departament: number,
@@ -12,4 +13,3 @@ export interface User{
     email: string,
     password: string
 }
-
