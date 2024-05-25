@@ -40,9 +40,8 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
         this.firebaseService.getDocument(userPath).then(userData => {
           this.form.controls.cn_id_usuario.setValue(this.userId);
 
-          // Si necesitas otros datos del usuario, puedes manejarlos aquí
         }).catch(error => {
-          console.error('Error getting user data:', error);
+          console.error('Error obteniendo datos de usuario', error);
         });
       }
     });
@@ -83,9 +82,7 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
    
       this.form.controls.ct_id_img.setValue(imgUrl);
       //delete this.form.value.cn_id_incidencia; // Elimina el id y toma el uid creado
-  
-      console.log('Datos del formulario antes de agregar:', this.form.value);
-  
+    
       this.firebaseService
         .addDocument(path, this.form.value)
         .then(async (resp) => {

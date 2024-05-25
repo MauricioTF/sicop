@@ -1,3 +1,20 @@
-.admin {
-    font-size: 13px;
-}
+ion-header {
+    ion-toolbar {
+      --background: #349ef2; // Color primario
+      color: black; // Texto en color negro
+  
+      ion-button {
+        color: black; // Texto en color negro
+        ion-icon {
+          color: black; // Iconos en color negro
+          font-size: 24px;
+        }
+      }
+  
+      ion-title {
+        color: black; // Texto en color negro
+        font-weight: bold;
+      }
+    }
+  }
+  

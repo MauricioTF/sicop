@@ -48,9 +48,9 @@ export class ActualizarIncidenciaComponent implements OnInit {
 
         this.firebaseService.getDocument(userPath).then(userData => {
           this.form.controls.cn_id_usuario.setValue(this.userId);
-          // Si necesitas otros datos del usuario, puedes manejarlos aquí
+
         }).catch(error => {
-          console.error('Error getting user data:', error);
+          console.error('Error obteniendo datos de usuario:', error);
         });
       }
     });

@@ -1,16 +1,22 @@
 <app-headers [vb_isModal]="true" title="Agregar"></app-headers>
 
-<ion-content>
+<ion-content  class="content">
+  <div class="logo-container">
+    <ion-avatar class="logo-avatar" *ngIf="form.value.ct_id_img">
+      <img [src]="form.value.ct_id_img" />
+    </ion-avatar>
+    <ion-icon
+      class="img-icon"
+      *ngIf="!form.value.ct_id_img"
+      name="image-outline"
+    ></ion-icon>
+    
+  </div>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="ion-padding ion-text-center" class="auth-form" (keypress.enter)="submit()">
 
       <!-- ------------------------Boton para agregar imagen-------------------------- -->
 
-      <ion-avatar *ngIf="form.value.ct_id_img">
-        <img [src]="form.value.ct_id_img" />
-      </ion-avatar>
-
-      <ion-icon class="img-icon" *ngIf="!form.value.ct_id_img" name="image-outline"></ion-icon>
 
       <ion-button (click)="takeImage()" mode="ios" size="small" shape="round">
         tomar/seleccionar foto

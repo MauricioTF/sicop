@@ -1,0 +1,29 @@
+.custom-input {
+    ion-item {
+      --highlight-color-focused: transparent; // Color de resaltado cuando se enfoca
+      --border-color: #ccc; // Color del borde
+  
+      ion-input {
+        --padding-start: 8px; // Espaciado izquierdo
+        --padding-end: 8px; // Espaciado derecho
+        --padding-top: 12px; // Espaciado superior
+        --padding-bottom: 12px; // Espaciado inferior
+        --border-radius: 8px; // Radio del borde
+        border: 1px solid var(--border-color); // Grosor y color del borde
+      }
+  
+      ion-icon {
+        font-size: 20px; // Tamaño del icono
+        margin-end: 8px; // Espaciado derecho del icono
+      }
+  
+      ion-button {
+        --padding-start: 8px; // Espaciado izquierdo del botón
+        --padding-end: 8px; // Espaciado derecho del botón
+        --padding-top: 12px; // Espaciado superior del botón
+        --padding-bottom: 12px; // Espaciado inferior del botón
+        margin-start: auto; // Margen izquierdo automático
+      }
+    }
+  }
+  

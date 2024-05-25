@@ -97,7 +97,7 @@ export class HomePage implements OnInit {
         this.firebaseService.getDocument(userPath).then(userData => {
           // Si necesitas otros datos del usuario, puedes manejarlos aquí
         }).catch(error => {
-          console.error('Error getting user data:', error);
+          console.error('Error obteniendo datos de usuario:', error);
         });
       }
     });

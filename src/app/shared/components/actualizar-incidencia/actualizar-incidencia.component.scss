@@ -1,0 +1,32 @@
+ion-content {
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px; /* Ajusta el margen superior según sea necesario */
+  }
+
+  .logo-avatar {
+    width: 150px; /* Tamaño deseado para el logo */
+    height: 150px; /* Tamaño deseado para el logo */
+    object-fit: cover; /* Ajusta la imagen para que cubra el contenedor */
+    border-radius: 0; /* Sin bordes redondeados */
+  }
+
+  .img-icon {
+    font-size: 100px; /* Tamaño deseado para el icono */
+    color: #349ef2; /* Color primario */
+  }
+
+  .image-button {
+    margin-top: 20px; /* Espacio entre el logo y el botón */
+    --background: #349ef2; /* Color primario */
+    --color: #fff;
+    font-size: 18px; /* Tamaño del texto */
+    font-weight: bold; /* Texto en negrita */
+  }
+
+  .auth-form {
+    margin-top: 20px; /* Espacio entre el botón y el resto del formulario */
+  }
+}

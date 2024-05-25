@@ -1,14 +1,12 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="new-background-color">
-    <ion-button slot="start">
-      
-      <ion-button *ngIf="vb_isModal" (click)="dismissModal()">
-        <ion-icon name="close-circle-outline"></ion-icon>
-      </ion-button>
 
-      <ion-menu-button *ngIf="vb_show_menu" menu="menu-content">
-      </ion-menu-button>
+    <ion-button *ngIf="vb_isModal" (click)="dismissModal()" color="danger">
+      <ion-icon name="close-circle-outline"></ion-icon>
     </ion-button>
+
+      <ion-menu-button slot="start" *ngIf="vb_show_menu" menu="menu-content">
+      </ion-menu-button>
 
     <ion-title>{{ vt_title }}</ion-title>
   </ion-toolbar>

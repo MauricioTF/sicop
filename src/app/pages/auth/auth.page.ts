@@ -73,10 +73,10 @@ export class AuthPage implements OnInit {
               icon: 'person-circle-outline'
             });
           } else {
-            throw new Error('User data is undefined');
+            throw new Error('Los datos del usuario no están definidos.');
           }
         }).catch(error => {
-          console.error('Error getting user info:', error);
+          console.error('Error al obtener información del usuario:', error);
           this.utilService.presentToast({
             message: error.message,
             duration: 2500,
