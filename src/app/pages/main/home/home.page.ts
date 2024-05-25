@@ -5,6 +5,8 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 import { User } from 'src/app/models/user.model';
 import { Incidencia } from 'src/app/models/incidencia.model';
 import { map } from 'rxjs';
+import { Diagnostico } from 'src/app/models/diagnostico.model';
+import { DiagnosticoIncidenciaComponent } from 'src/app/shared/components/diagnostico-incidencia/diagnostico-incidencia.component';
 
 @Component({
   selector: 'app-home',
@@ -19,11 +21,11 @@ export class HomePage implements OnInit {
 
   loading: boolean = false;
   incidencia : Incidencia[] = [];
+  form: any;
 
   ngOnInit() {
 
     // this.getIncidencias()
-    
   }
 
   //para mostrar los incidente pero no tener que recargar
@@ -35,6 +37,8 @@ export class HomePage implements OnInit {
   //para editar incidente
   async addUpdateIncident(incidencia?: Incidencia){
 
+    console.log(incidencia);
+
     let modal = await this.utilService.getModal({
       component: ActualizarIncidenciaComponent,
       cssClass: 'add-update-modal',
@@ -45,6 +49,20 @@ export class HomePage implements OnInit {
       if(modal) this.getIncidencias();
   }  
 
+  async addDiagnostico(diagnostico?: Diagnostico, incidencia?: Incidencia){
+
+    console.log(incidencia['id']);
+
+    let modal = await this.utilService.getModal({
+      component: DiagnosticoIncidenciaComponent,
+      cssClass: 'add-update-modal',
+      componentProps: {diagnostico, incidencia}
+    })
+    
+      // para que cargue automaticamente los incidentes agregados
+      if(modal) this.getIncidencias();
+
+  }
   //retorna datos del usuario en el local storage
   user(): User {
     return this.utilService.getLocalStorage('t_usuarios');
@@ -93,4 +111,6 @@ export class HomePage implements OnInit {
       event.target.complete();
     }, 1000)
   }
+
+  
 }

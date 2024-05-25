@@ -7,6 +7,7 @@ import { UpdateAdministratorComponent } from './components/update-administrator/
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActualizarIncidenciaComponent } from './components/actualizar-incidencia/actualizar-incidencia.component';
+import { DiagnosticoIncidenciaComponent } from './components/diagnostico-incidencia/diagnostico-incidencia.component';
 
 
 
@@ -16,7 +17,8 @@ import { ActualizarIncidenciaComponent } from './components/actualizar-incidenci
     LoginInputComponent,
     LogoComponent,
     UpdateAdministratorComponent,
-    ActualizarIncidenciaComponent
+    ActualizarIncidenciaComponent,
+    DiagnosticoIncidenciaComponent
   ],
   exports: [
     HeadersComponent,
@@ -26,7 +28,9 @@ import { ActualizarIncidenciaComponent } from './components/actualizar-incidenci
     ActualizarIncidenciaComponent,
     IonicModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DiagnosticoIncidenciaComponent
+
   ],
   imports: [
     CommonModule,

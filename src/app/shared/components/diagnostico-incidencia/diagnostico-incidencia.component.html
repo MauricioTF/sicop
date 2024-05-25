@@ -1,0 +1,102 @@
+<app-headers [vb_isModal]="true" title="Diagnostico"></app-headers>
+
+<ion-content>
+  <form
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+    class="ion-padding ion-text-center"
+    class="auth-form"
+    (keypress.enter)="submit()"
+  >
+    <!-- ------------------------Boton para agregar imagen-------------------------- -->
+
+    <ion-avatar *ngIf="form.value.ct_id_img">
+      <img [src]="form.value.ct_id_img" />
+    </ion-avatar>
+    <ion-icon
+      class="img-icon"
+      *ngIf="!form.value.ct_id_img"
+      name="image-outline"
+    ></ion-icon>
+
+    <ion-button (click)="takeImage()" mode="ios" size="small" shape="round">
+      tomar/seleccionar foto
+    </ion-button>
+
+    <!-- -----------------------Descripcion---------------------------------- -->
+    <app-login-input
+      vt_auto_complete="ct_descripcion"
+      vt_type="text"
+      vt_label="Descripción"
+      [control]="form.controls.ct_descripcion"
+    >
+    </app-login-input>
+
+    <div
+      class="validators"
+      *ngIf="
+        form.controls.ct_descripcion.errors &&
+        form.controls.ct_descripcion.touched
+      "
+    >
+      <div *ngIf="form.controls.ct_descripcion.errors?.['required']">
+        Es necesaria una descripcion para el diagnostico
+      </div>
+    </div>
+
+    <!-- -----------------------Observaciones---------------------------------- -->
+    <app-login-input
+      vt_auto_complete="ct_observaciones"
+      vt_type="text"
+      vt_label="Observaciones"
+      [control]="form.controls.ct_observaciones"
+    >
+    </app-login-input>
+
+    <div
+      class="validators"
+      *ngIf="
+        form.controls.ct_observaciones.errors &&
+        form.controls.ct_observaciones.touched
+      "
+    >
+      <div *ngIf="form.controls.ct_observaciones.errors?.['required']">
+        Es necesario una observacion sobre la incidencia
+      </div>
+    </div>
+
+    <!-- -----------------------Tiempo estimado de solucion---------------------------------- -->
+    <app-login-input
+      vt_auto_complete="ct_tiempo_estimado_solucion"
+      vt_type="text"
+      vt_label="Tiempo estimado de solucion"
+      [control]="form.controls.ct_tiempo_estimado_solucion"
+    >
+    </app-login-input>
+
+    <div
+      class="validators"
+      *ngIf="
+        form.controls.ct_tiempo_estimado_solucion.errors &&
+        form.controls.ct_tiempo_estimado_solucion.touched
+      "
+    >
+      <div
+        *ngIf="form.controls.ct_tiempo_estimado_solucion.errors?.['required']"
+      >
+        Es necesario un tiempo estimado para la solucion del incidente
+      </div>
+    </div>
+
+    <!-- -----------------------Boton---------------------------------- -->
+    <ion-button
+      class="submit"
+      type="submit"
+      mode="ios"
+      [disabled]="form.invalid"
+    >
+      Agregar diagnostico
+      <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+    </ion-button>
+  </form>
+</ion-content>

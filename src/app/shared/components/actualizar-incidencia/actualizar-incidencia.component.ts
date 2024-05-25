@@ -27,6 +27,7 @@ export class ActualizarIncidenciaComponent implements OnInit {
     cn_id_usuario: new FormControl(null),
     cn_id_estado: new FormControl(null),
     cn_id_afectacion: new FormControl(null),
+    cf_fecha_hora: new FormControl(null),
     cn_id_riesgo: new FormControl(null),
     cn_id_prioridad: new FormControl(null),
     cn_id_categoria: new FormControl(null),
@@ -56,7 +57,9 @@ export class ActualizarIncidenciaComponent implements OnInit {
   }
 
   async submit() {
-    console.log(this.form.value);
+
+    //otorga hora de CR
+    this.form.controls.cf_fecha_hora.setValue(new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }));
     this.crearIncidencia();
   }
 
@@ -74,7 +77,6 @@ export class ActualizarIncidenciaComponent implements OnInit {
       });
       return;
     }
-
 
     let path = `t_incidencias/${this.userId}/t_incidencias`;
     
