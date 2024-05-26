@@ -1,8 +1,17 @@
+
+
+
+// .shield-icon {
+//   font-size: 80px;
+//   margin-top: 40px;
+//   width: 50%;
+//   height: 50%;
+//   margin: 0 auto;
+// }
+
 .shield-icon {
-  font-size: 80px;
-  margin-top: 40px;
-  width: 50%;
-  height: 50%;
-  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* O usa 'cover' dependiendo de cómo quieras que la imagen se ajuste */
 }
 
