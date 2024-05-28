@@ -8,7 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActualizarIncidenciaComponent } from './components/actualizar-incidencia/actualizar-incidencia.component';
 import { DiagnosticoIncidenciaComponent } from './components/diagnostico-incidencia/diagnostico-incidencia.component';
-
+import { RegistrarUsuarioComponent } from './components/registrar-usuario/registrar-usuario.component';
 
 
 @NgModule({
@@ -18,7 +18,8 @@ import { DiagnosticoIncidenciaComponent } from './components/diagnostico-inciden
     LogoComponent,
     UpdateAdministratorComponent,
     ActualizarIncidenciaComponent,
-    DiagnosticoIncidenciaComponent
+    DiagnosticoIncidenciaComponent,
+    RegistrarUsuarioComponent
   ],
   exports: [
     HeadersComponent,
@@ -29,8 +30,8 @@ import { DiagnosticoIncidenciaComponent } from './components/diagnostico-inciden
     IonicModule,
     FormsModule,
     ReactiveFormsModule,
-    DiagnosticoIncidenciaComponent
-
+    DiagnosticoIncidenciaComponent,
+    RegistrarUsuarioComponent
   ],
   imports: [
     CommonModule,

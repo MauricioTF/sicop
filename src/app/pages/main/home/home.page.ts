@@ -8,6 +8,9 @@ import { map } from 'rxjs';
 import { Diagnostico } from 'src/app/models/diagnostico.model';
 import { DiagnosticoIncidenciaComponent } from 'src/app/shared/components/diagnostico-incidencia/diagnostico-incidencia.component';
 
+import { combineLatest } from 'rxjs';
+import { Rol } from 'src/app/models/rol.model';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -21,11 +24,19 @@ export class HomePage implements OnInit {
 
   loading: boolean = false;
   incidencia : Incidencia[] = [];
-  form: any;
+  roles : Rol[] = [];
 
-  ngOnInit() {
+  form: any;
+  rolesIncidencias: string[] = [];
+
+
+   ngOnInit() {
 
     // this.getIncidencias()
+    // console.log(    this.getRolesIncidencias(String(this.user1().cn_id_usuario)));
+    // this.mostrarRolesAsignados();
+    // console.log(this.rolesIncidencias);
+    this.getRoles();
   }
 
   //para mostrar los incidente pero no tener que recargar
@@ -51,22 +62,63 @@ export class HomePage implements OnInit {
 
   async addDiagnostico(diagnostico?: Diagnostico, incidencia?: Incidencia){
 
-    console.log(incidencia['id']);
-
     let modal = await this.utilService.getModal({
       component: DiagnosticoIncidenciaComponent,
       cssClass: 'add-update-modal',
       componentProps: {diagnostico, incidencia}
     })
-    
-      // para que cargue automaticamente los incidentes agregados
-      if(modal) this.getIncidencias();
 
   }
+
+  //--------------------------------------------------------------------------------------
+
+//   rol_user(cn_id_usuario: string){ 
+//     let roles_asignados = []; 
+//     let rol = 0;  
+//     this.firebaseService.getRolUsuario().subscribe(data => {
+//       let specificRole = data.filter(role => role.cn_id_usuario === cn_id_usuario);
+
+//         this.firebaseService.getRol().subscribe(data => {
+
+//           //vamos a obtener los nombres de los roles que tiene el usuario
+//         //acá recorremos los roles del usuario
+//         for (let i = 0; i < specificRole.length; i++) {
+//         //recorremos la lista de roles
+//           for (let j = 0; j < data.length; j++) {
+            
+//             if(specificRole[i].cn_id_rol === data[j].cn_id_rol){
+//               console.log("Pru ls", specificRole[i].cn_id_rol);
+//               if(specificRole[i].cn_id_rol === 2){
+//                 rol = 2;
+//               }
+
+//               roles_asignados.push(data[j].ct_descripcion);
+//             }
+//           }
+//         }
+
+//         });
+//         console.log("ROL HOME", rol);
+
+//         return rol;
+//     });
+//     // return roles_asignados;
+// }
+
+
+// _-----------------------------
+
+  //-------------------------------------------------------------------------------------
+
   //retorna datos del usuario en el local storage
   user(): User {
     return this.utilService.getLocalStorage('t_usuarios');
   }
+
+    //obtiene datos del usuario del local storage
+    user1(): User{
+      return this.utilService.getLocalStorage('user');
+    }
 
   //llama coleccion de datos (lista de incidencias reportadas)
   getIncidencias(){
@@ -102,6 +154,28 @@ export class HomePage implements OnInit {
       }
     });
   }
+  
+  // -------------------------------------------------- lista de roles
+    //llama coleccion de datos (lista de incidencias reportadas)
+    getRoles(){
+
+      let path = `t_roles`;
+
+      this.loading = true;
+
+      let sub = this.firebaseService.getCollectionData(path)
+        .snapshotChanges().pipe(
+          map(changes => changes.map( c=> ({
+            id: c.payload.doc.id,
+            ...c.payload.doc.data()
+          })))
+        ).subscribe({
+          next:(resp:any) => {
+            this.roles = resp
+            console.log(this.roles);
+          }
+        })
+    }
 
   // Para refrescar pantalla
   doRefresh(event : any){

@@ -1,0 +1,60 @@
+<app-headers [vb_isModal]="true" title="Agregar"></app-headers>
+
+<ion-content  class="content">
+  
+    <form [formGroup]="form" (ngSubmit)="submitUsuario()" class="ion-padding ion-text-center" class="auth-form" (keypress.enter)="submitUsuario()">
+
+      <!-- -----------------------Titulo---------------------------------- -->
+      <app-login-input 
+      vt_auto_complete="ct_nomre"
+      vt_type="text"
+      vt_label="ct_nomre"
+      [control]="form.controls.ct_titulo"
+      >
+      </app-login-input>
+
+      <div class="validators" *ngIf="form.controls.ct_nomre.errors && form.controls.ct_nomre.touched">
+        <div *ngIf="form.controls.ct_nomre.errors?.['required']">Es necesari un titulo para el incidente</div>
+      </div>
+
+
+      <!-- -----------------------Descripcion---------------------------------- -->
+      <app-login-input 
+      vt_auto_complete="ct_apellido1"
+      vt_type="text"
+      vt_label="ct_apellido1"
+      [control]="form.controls.ct_descripcion"
+      >
+      </app-login-input>
+
+      <div class="validators" *ngIf="form.controls.ct_apellido1.errors && form.controls.ct_apellido1.touched">
+        <div *ngIf="form.controls.ct_apellido1.errors?.['required']">Es necesaria una descripcion del incidente</div>
+      </div>
+
+      <!-- -----------------------lugar---------------------------------- -->
+      <app-login-input 
+      vt_auto_complete="ct_apellido2"
+      vt_type="text"
+      vt_label="ct_apellido2"
+      [control]="form.controls.ct_lugar"
+      >
+      </app-login-input>
+
+      <div class="validators" *ngIf="form.controls.ct_apellido2.errors && form.controls.ct_apellido2.touched">
+        <div *ngIf="form.controls.ct_apellido2.errors?.['required']">Es necesario el lugar del incidente</div>
+      </div>
+      
+      <!-- -----------------------imagen---------------------------------- -->
+
+      
+
+      <!-- -----------------------Boton---------------------------------- -->
+      <ion-button class="submit" type="submit" mode="ios" [disabled]="form.invalid">
+        Registrar usuario
+        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button>
+
+    </form>
+
+  
+</ion-content>

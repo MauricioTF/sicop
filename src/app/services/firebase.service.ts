@@ -8,6 +8,8 @@ import { Incidencia } from '../models/incidencia.model';
 import { addDoc, collection, doc, getDoc, getFirestore } from '@angular/fire/firestore';
 import { UtilsService } from './utils.service';
 import {getDownloadURL, getStorage, ref, uploadString} from 'firebase/storage'
+import { Observable } from 'rxjs';
+import { Rol } from '../models/rol.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +20,7 @@ export class FirebaseService {
   firestore = inject(AngularFirestore);
   utilsService = inject(UtilsService);
   dataRef : AngularFirestoreCollection<Incidencia>;//obtiene los datos de la bd
+  dataRefRol : AngularFirestoreCollection<Rol>;//obtiene los datos de la bd
 
   getAuth() {
     return getAuth();
@@ -63,9 +66,24 @@ export class FirebaseService {
     })
   }
 
-  //Obtiene los datos de incidencias de la bd
+  //Obtiene los datos de incidencias de la bd (para ordenarlos)
   getCollectionData(path: any): AngularFirestoreCollection<Incidencia>{
     this.dataRef = this.firestore.collection(path, ref => ref.orderBy('ct_titulo', 'desc'))
     return this.dataRef;
+  }
+
+  getCollectionDataRol(path: any): AngularFirestoreCollection<Rol>{
+    this.dataRefRol = this.firestore.collection(path, ref => ref.orderBy('cn_id_rol', 'desc'))
+    return this.dataRefRol;
+  }
+
+   // Método para obtener datos de la tabla rol_usuario
+  getRolUsuario(): Observable<any[]> {
+    return this.firestore.collection('t_rol_usuario').valueChanges();
+  }
+
+  // Método para obtener datos de la tabla rol
+  getRol(): Observable<any[]> {
+    return this.firestore.collection('t_roles').valueChanges();
   }
 }
