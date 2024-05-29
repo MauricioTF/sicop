@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ActualizarIncidenciaComponent } from 'src/app/shared/components/actualizar-incidencia/actualizar-incidencia.component';
 import { FirebaseService } from 'src/app/services/firebase.service';
@@ -24,26 +24,40 @@ export class HomePage implements OnInit {
 
   loading: boolean = false;
   incidencia : Incidencia[] = [];
-  roles : Rol[] = [];
 
-  form: any;
-  rolesIncidencias: string[] = [];
+  specificRole: any;
+  roles: any;
+  id_rol_usuario : any;
+  tecnico: boolean = false;
+  usuario: boolean = false;
+  encargado: boolean = false;
 
+  rolesArray: number[] = [];
+  cdr = inject(ChangeDetectorRef);
 
-   ngOnInit() {
+   async ngOnInit() {
 
-    // this.getIncidencias()
-    // console.log(    this.getRolesIncidencias(String(this.user1().cn_id_usuario)));
-    // this.mostrarRolesAsignados();
-    // console.log(this.rolesIncidencias);
-    this.getRoles();
+    this.specificRole = await this.getSpecificRole(String(this.user().cn_id_usuario)); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
+
+    for (let i = 0; i < this.specificRole.length; i++) {
+      this.rolesArray.push(this.specificRole[i].cn_id_rol)
+      }
+
+    console.log("pr : ",this.rolesArray);
+    // this.rolesArray = await this.rolesXusuario();
+
+    this.tecnico = this.rolesArray.includes(4);
+    this.usuario = this.rolesArray.includes(2);
+    this.encargado = this.rolesArray.includes(3);
+
+    this.cdr.detectChanges();
+    // console.log("pruebando : ", this.id_rol_usuario.length);
   }
 
   //para mostrar los incidente pero no tener que recargar
   ionViewWillEnter(){
     this.getIncidencias();
   }
-
 
   //para editar incidente
   async addUpdateIncident(incidencia?: Incidencia){
@@ -70,55 +84,10 @@ export class HomePage implements OnInit {
 
   }
 
-  //--------------------------------------------------------------------------------------
-
-//   rol_user(cn_id_usuario: string){ 
-//     let roles_asignados = []; 
-//     let rol = 0;  
-//     this.firebaseService.getRolUsuario().subscribe(data => {
-//       let specificRole = data.filter(role => role.cn_id_usuario === cn_id_usuario);
-
-//         this.firebaseService.getRol().subscribe(data => {
-
-//           //vamos a obtener los nombres de los roles que tiene el usuario
-//         //acá recorremos los roles del usuario
-//         for (let i = 0; i < specificRole.length; i++) {
-//         //recorremos la lista de roles
-//           for (let j = 0; j < data.length; j++) {
-            
-//             if(specificRole[i].cn_id_rol === data[j].cn_id_rol){
-//               console.log("Pru ls", specificRole[i].cn_id_rol);
-//               if(specificRole[i].cn_id_rol === 2){
-//                 rol = 2;
-//               }
-
-//               roles_asignados.push(data[j].ct_descripcion);
-//             }
-//           }
-//         }
-
-//         });
-//         console.log("ROL HOME", rol);
-
-//         return rol;
-//     });
-//     // return roles_asignados;
-// }
-
-
-// _-----------------------------
-
-  //-------------------------------------------------------------------------------------
-
   //retorna datos del usuario en el local storage
   user(): User {
-    return this.utilService.getLocalStorage('t_usuarios');
+    return this.utilService.getLocalStorage('user');
   }
-
-    //obtiene datos del usuario del local storage
-    user1(): User{
-      return this.utilService.getLocalStorage('user');
-    }
 
   //llama coleccion de datos (lista de incidencias reportadas)
   getIncidencias(){
@@ -154,28 +123,6 @@ export class HomePage implements OnInit {
       }
     });
   }
-  
-  // -------------------------------------------------- lista de roles
-    //llama coleccion de datos (lista de incidencias reportadas)
-    getRoles(){
-
-      let path = `t_roles`;
-
-      this.loading = true;
-
-      let sub = this.firebaseService.getCollectionData(path)
-        .snapshotChanges().pipe(
-          map(changes => changes.map( c=> ({
-            id: c.payload.doc.id,
-            ...c.payload.doc.data()
-          })))
-        ).subscribe({
-          next:(resp:any) => {
-            this.roles = resp
-            console.log(this.roles);
-          }
-        })
-    }
 
   // Para refrescar pantalla
   doRefresh(event : any){
@@ -186,5 +133,62 @@ export class HomePage implements OnInit {
     }, 1000)
   }
 
+  // ------------------------------------------Obtienen roles del usuario -----------------------
+  getSpecificRole(cn_id_usuario: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getRolUsuario().subscribe(
+        data => {
+          const specificRole = data.filter(role => role.cn_id_usuario === cn_id_usuario);
+          if (specificRole) {
+            // console.log(`Rol de ${cn_id_rol}:`, specificRole);
+            resolve(specificRole);
+          } else {
+            // console.log(`Rol de ${cn_id_rol} no encontrado`);
+            resolve(null); // Resuelve con null si no se encuentra el rol
+          }
+        },
+        error => {
+          console.error('Error al obtener roles:', error);
+          reject(error); // Rechaza la promesa en caso de error
+        }
+      );
+    });
+  }
+
+  getNameRol(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.firebaseService.getRol().subscribe(
+        data => {
+          const rolesA = data;
+         resolve(rolesA);
+
+        },
+        error => {
+          console.error('Error al obtener roles:', error);
+          reject(error); // Rechaza la promesa en caso de error
+        }
+      );
+    });
+  }
+
+  async rolesXusuario(){
+
+    this.roles = await this.getNameRol();//obtiene los roles registrados
+    this.specificRole = await this.getSpecificRole(String(this.user().cn_id_usuario)); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
+
+    let arr = [];
+    for (let i = 0; i < this.specificRole.length; i++) {
+      arr.push(this.specificRole[i].cn_id_rol);
+
+      for (let j = 0; j < this.roles.length; j++) {
+        
+        if(this.specificRole[i].cn_id_rol === this.roles[j].cn_id_rol){
+          console.log("Roles del usuario logueado: ", this.roles[j].ct_descripcion);
+        }
+      }
+    }
+
+    return arr;
+  }
   
 }

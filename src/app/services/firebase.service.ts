@@ -86,4 +86,5 @@ export class FirebaseService {
   getRol(): Observable<any[]> {
     return this.firestore.collection('t_roles').valueChanges();
   }
+  
 }
