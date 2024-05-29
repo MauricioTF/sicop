@@ -1,0 +1,30 @@
+<app-headers [vb_isModal]="true" title="Agregar"></app-headers>
+
+<ion-content  class="content">
+
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="ion-padding ion-text-center" class="auth-form" (keypress.enter)="submit()">
+
+      <!-- -----------------------Descripcion---------------------------------- -->
+      <app-login-input 
+      vt_auto_complete="cn_id_usuario"
+      vt_type="text"
+      vt_label="cn_id_usuario"
+      [control]="form.controls.cn_id_usuario"
+      >
+      </app-login-input>
+
+      <div class="validators" *ngIf="form.controls.cn_id_usuario.errors && form.controls.cn_id_usuario.touched">
+        <div *ngIf="form.controls.cn_id_usuario.errors?.['required']">Es necesaria una descripcion del incidente</div>
+      </div>
+
+      <!-- -----------------------Boton---------------------------------- -->
+      <ion-button class="submit" type="submit" mode="ios" [disabled]="form.invalid">
+        Asignar incidencia
+        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button>
+
+    </form>
+
+  
+</ion-content>

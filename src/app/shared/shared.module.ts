@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActualizarIncidenciaComponent } from './components/actualizar-incidencia/actualizar-incidencia.component';
 import { DiagnosticoIncidenciaComponent } from './components/diagnostico-incidencia/diagnostico-incidencia.component';
 import { RegistrarUsuarioComponent } from './components/registrar-usuario/registrar-usuario.component';
+import { AsignarIncidenciaComponent } from './components/asignar-incidencia/asignar-incidencia.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { RegistrarUsuarioComponent } from './components/registrar-usuario/regist
     UpdateAdministratorComponent,
     ActualizarIncidenciaComponent,
     DiagnosticoIncidenciaComponent,
-    RegistrarUsuarioComponent
+    RegistrarUsuarioComponent,
+    AsignarIncidenciaComponent
   ],
   exports: [
     HeadersComponent,
@@ -31,7 +33,8 @@ import { RegistrarUsuarioComponent } from './components/registrar-usuario/regist
     FormsModule,
     ReactiveFormsModule,
     DiagnosticoIncidenciaComponent,
-    RegistrarUsuarioComponent
+    RegistrarUsuarioComponent,
+    AsignarIncidenciaComponent
   ],
   imports: [
     CommonModule,

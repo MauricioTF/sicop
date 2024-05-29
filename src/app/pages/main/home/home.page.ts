@@ -10,6 +10,8 @@ import { DiagnosticoIncidenciaComponent } from 'src/app/shared/components/diagno
 
 import { combineLatest } from 'rxjs';
 import { Rol } from 'src/app/models/rol.model';
+import { AsignarIncidenciaComponent } from 'src/app/shared/components/asignar-incidencia/asignar-incidencia.component';
+import { Asignaciones } from 'src/app/models/asignaciones.model';
 
 @Component({
   selector: 'app-home',
@@ -62,7 +64,6 @@ export class HomePage implements OnInit {
   //para editar incidente
   async addUpdateIncident(incidencia?: Incidencia){
 
-    console.log(incidencia);
 
     let modal = await this.utilService.getModal({
       component: ActualizarIncidenciaComponent,
@@ -75,6 +76,8 @@ export class HomePage implements OnInit {
   }  
 
   async addDiagnostico(diagnostico?: Diagnostico, incidencia?: Incidencia){
+
+    console.log(incidencia);
 
     let modal = await this.utilService.getModal({
       component: DiagnosticoIncidenciaComponent,
@@ -191,4 +194,16 @@ export class HomePage implements OnInit {
     return arr;
   }
   
+
+  // ---------------------------------Asignar inciencia-------------------------------
+  async asignarIncidencia(asignaciones?: Asignaciones, incidencia?: Incidencia){
+
+    console.log(incidencia);
+
+    let modal = await this.utilService.getModal({
+      component: AsignarIncidenciaComponent,
+      cssClass: 'add-update-modal',
+      componentProps: {asignaciones, incidencia}
+    })
+  }
 }

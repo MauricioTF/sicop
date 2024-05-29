@@ -32,7 +32,7 @@
         </ion-item-option>
 
         <!-- boton para asignar incidencia -->
-        <ion-item-option *ngIf="encargado" color="tertiary">
+        <ion-item-option *ngIf="encargado" (click)="asignarIncidencia(null, incidencia)" color="tertiary">
           <ion-icon *ngIf="encargado" class="option-btn" name="add-outline"></ion-icon>
         </ion-item-option>
 

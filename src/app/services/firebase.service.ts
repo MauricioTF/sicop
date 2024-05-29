@@ -86,5 +86,9 @@ export class FirebaseService {
   getRol(): Observable<any[]> {
     return this.firestore.collection('t_roles').valueChanges();
   }
-  
+
+    // Método para obtener datos de la tabla usuarios (para obtener los tecnicos)
+    getTecnicos(): Observable<any[]> {
+      return this.firestore.collection('t_usuarios').valueChanges();
+    }
 }
