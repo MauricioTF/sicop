@@ -23,53 +23,47 @@ export class AsignarIncidenciaComponent  implements OnInit {
   t_incidencia = {} as Incidencia;
   userId: string | null = null;
 
+  specificRole: any;
+  usuarios: any;
+  id_rol_usuario : any;
+
+  tecnicos: User[] = [];
+  selectedTecnicoId: string | null = null;
+
   form = new FormGroup({
     cn_id_asignacion_incidencia: new FormControl(1),
     cn_id_usuario: new FormControl(null),
     cn_id_incidencia: new FormControl(null),
   });
 
-  ngOnInit() {
+  async ngOnInit() {
+
     this.form.controls.cn_id_incidencia.setValue(this.incidencia['id']);
+    this.tecnicos = await this.rolesXusuario();
 
-    this.firebaseService.getCurrentUser().subscribe(user => {
-      if (user) {
-        this.userId = user.uid;
-        const userPath = `t_usuarios/${this.userId}`; // Asegúrate de que el path sea correcto según tu estructura de datos
-
-        this.firebaseService.getDocument(userPath).then(userData => {
-          this.form.controls.cn_id_usuario.setValue(this.userId);
-
-        }).catch(error => {
-          console.error('Error obteniendo datos de usuario:', error);
-        });
-      }
-    });
   }
 
   async submit() {
 
+        // Asignar el valor seleccionado del ion-select al formControl
+        const selectedTecnicoId = this.form.get('cn_id_usuario')?.value;
+        this.form.controls['cn_id_usuario'].setValue(selectedTecnicoId);
+
     //otorga hora de CR
     // this.form.controls.cf_fecha_hora.setValue(new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }));
-    this.crearIncidencia();
+    this.asignarIncidencia();
+  }
+
+  
+  //retorna datos del usuario en el local storage
+  user(): User {
+    return this.utilService.getLocalStorage('user');
   }
 
   // Para crear incidencia
-  async crearIncidencia() {
+  async asignarIncidencia() {
 
-    if (!this.userId) {
-      console.error('El UID del usuario no está definido');
-      this.utilService.presentToast({
-        message: 'Error: El UID del usuario no está definido',
-        duration: 2500,
-        color: 'danger',
-        position: 'bottom',
-        icon: 'alert-circle-outline',
-      });
-      return;
-    }
-
-    let path = `t_asignacion_incidencia/${this.userId}/t_asignacion_incidencia`;
+    let path = `t_asignacion_incidencia/${this.user().cn_id_usuario}/t_asignacion_incidencia`;
     
     console.log('Path de la incidencia asignacion:', path);
 
@@ -106,5 +100,75 @@ export class AsignarIncidenciaComponent  implements OnInit {
       });
   }
 
+// --------------------------------------obtener datos de los tecnicos
+// -------------------------------------obtener los usuario que tengan el rol de tecnico
+
+// obtenemos todos los usuario registrados
+getTecnicos(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    this.firebaseService.getTecnicos().subscribe(
+      data => {
+        const tecnicos = data;
+       resolve(tecnicos);
+        console.log("Todos los usuarios ",tecnicos);
+      },
+      error => {
+        console.error('Error al obtener roles:', error);
+        reject(error); // Rechaza la promesa en caso de error
+      }
+    );
+  });
+}
+
+// obtenemos los roles que tiene cada usuario para saber si es técnico
+getSpecificRole(cn_id_usuario: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    this.firebaseService.getRolUsuario().subscribe(
+      data => {
+        const specificRole = data.filter(role => role.cn_id_usuario === cn_id_usuario);
+        if (specificRole) {
+          // console.log(`Rol de ${cn_id_rol}:`, specificRole);
+          resolve(specificRole);
+        } else {
+          // console.log(`Rol de ${cn_id_rol} no encontrado`);
+          resolve(null); // Resuelve con null si no se encuentra el rol
+        }
+      },
+      error => {
+        console.error('Error al obtener roles:', error);
+        reject(error); // Rechaza la promesa en caso de error
+      }
+    );
+  });
+}
+
+async rolesXusuario(){
+
+  this.usuarios = await this.getTecnicos();//obtiene los roles registrados
+
+  let u_tecnios = [];
+
+  // recorro los tecnicos para acceder a sus id
+  for (let i = 0; i < this.usuarios.length; i++) {
+
+    // asignamos a specific rol el rol con cada usuario
+    this.specificRole = await this.getSpecificRole(this.usuarios[i].cn_id_usuario); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
+
+  // recorremos a los roles de cada usuario
+  for (let j = 0; j < this.specificRole.length; j++) {
+
+    // consultamos si el usuario tiene rol de tecnico
+    if(this.specificRole[j].cn_id_rol === 4){
+      // agregamos al arreglo el id del usuario con rol de tenico
+      u_tecnios.push(this.usuarios[i]);
+    }
+
+  }
+
+}
+  console.log("Usuarios con rol de tecnico ",u_tecnios);
+
+   return u_tecnios;
+}
 
 }

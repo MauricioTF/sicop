@@ -1,30 +1,21 @@
 <app-headers [vb_isModal]="true" title="Agregar"></app-headers>
 
-<ion-content  class="content">
+<ion-content class="content">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="ion-padding ion-text-center auth-form">
+    <!-- Seleccionar técnico -->
+    <ion-item>
+      <ion-label>Técnicos</ion-label>
+      <ion-select formControlName="cn_id_usuario" placeholder="Selecciona un técnico">
+        <ion-select-option *ngFor="let tecnico of tecnicos" [value]="tecnico.cn_id_usuario">
+          {{ tecnico.ct_nombre }} <!-- Ajusta para mostrar el nombre del técnico -->
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
 
-
-    <form [formGroup]="form" (ngSubmit)="submit()" class="ion-padding ion-text-center" class="auth-form" (keypress.enter)="submit()">
-
-      <!-- -----------------------Descripcion---------------------------------- -->
-      <app-login-input 
-      vt_auto_complete="cn_id_usuario"
-      vt_type="text"
-      vt_label="cn_id_usuario"
-      [control]="form.controls.cn_id_usuario"
-      >
-      </app-login-input>
-
-      <div class="validators" *ngIf="form.controls.cn_id_usuario.errors && form.controls.cn_id_usuario.touched">
-        <div *ngIf="form.controls.cn_id_usuario.errors?.['required']">Es necesaria una descripcion del incidente</div>
-      </div>
-
-      <!-- -----------------------Boton---------------------------------- -->
-      <ion-button class="submit" type="submit" mode="ios" [disabled]="form.invalid">
-        Asignar incidencia
-        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
-      </ion-button>
-
-    </form>
-
-  
+    <!-- Botón -->
+    <ion-button class="submit" type="submit" mode="ios" [disabled]="form.invalid">
+      Asignar incidencia
+      <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+    </ion-button>
+  </form>
 </ion-content>
