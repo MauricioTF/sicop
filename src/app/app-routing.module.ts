@@ -5,7 +5,7 @@ const routes: Routes = [
  
   {
     path: '',
-    redirectTo: 'auth',
+    redirectTo: 'splash',
     pathMatch: 'full'
   },
   {
@@ -20,6 +20,11 @@ const routes: Routes = [
     path: 'empty',
     loadChildren: () => import('./pages/empty/empty.module').then( m => m.EmptyPageModule)
   },
+  {
+    path: 'splash',
+    loadChildren: () => import('./pages/splash/splash.module').then( m => m.SplashPageModule)
+  },
+
 
 
 ];
