@@ -1,3 +1,4 @@
+// Importación de módulos y servicios necesarios
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -6,6 +7,7 @@ import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
+// Decorador Component que define la configuración del componente
 @Component({
   selector: 'app-actualizar-incidencia',
   templateUrl: './actualizar-incidencia.component.html',
@@ -13,6 +15,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class ActualizarIncidenciaComponent implements OnInit {
 
+    // Inyección de servicios y definición de variables
   firebaseService = inject(FirebaseService);
   utilService = inject(UtilsService);
 
@@ -22,6 +25,7 @@ export class ActualizarIncidenciaComponent implements OnInit {
   t_incidencia = {} as Incidencia;
   userId: string | null = null;
 
+    // Definición del formulario
   form = new FormGroup({
     cn_id_incidencia: new FormControl(1),
     cn_id_usuario: new FormControl(null),
@@ -40,6 +44,7 @@ export class ActualizarIncidenciaComponent implements OnInit {
     cn_numero_incidente: new FormControl(null),
   });
 
+    // Método que se ejecuta al inicializar el componente
   ngOnInit() {
     this.firebaseService.getCurrentUser().subscribe(user => {
       if (user) {
@@ -56,6 +61,7 @@ export class ActualizarIncidenciaComponent implements OnInit {
     });
   }
 
+    // Método que se ejecuta al enviar el formulario
   async submit() {
 
     //otorga hora de CR
@@ -63,7 +69,7 @@ export class ActualizarIncidenciaComponent implements OnInit {
     this.crearIncidencia();
   }
 
-  // Para crear incidencia
+  // Método para crear la incidencia
   async crearIncidencia() {
 
     if (!this.userId) {
@@ -124,7 +130,7 @@ export class ActualizarIncidenciaComponent implements OnInit {
       });
   }
 
-  // Para obtener las fotos
+  // Método para obtener las fotos
   async takeImage() {
     const dataUrl = (
       await this.utilService.takePicture('Foto de la incidencia')

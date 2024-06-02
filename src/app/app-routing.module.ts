@@ -16,6 +16,11 @@ const routes: Routes = [
     path: 'main',
     loadChildren: () => import('./pages/main/main.module').then( m => m.MainPageModule)
   },
+  {
+    path: 'empty',
+    loadChildren: () => import('./pages/empty/empty.module').then( m => m.EmptyPageModule)
+  },
+
 
 ];
 

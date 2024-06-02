@@ -1,15 +1,18 @@
+// Importación de módulos y servicios necesarios
 import { Component, Inject, Input, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Incidencia } from 'src/app/models/incidencia.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
+// Decorador Component que define la configuración del componente
 @Component({
   selector: 'app-diagnostico-incidencia',
   templateUrl: './diagnostico-incidencia.component.html',
   styleUrls: ['./diagnostico-incidencia.component.scss'],
 })
 export class DiagnosticoIncidenciaComponent implements OnInit {
+   // Inyección de servicios y definición de variables
   firebaseService = inject(FirebaseService);
   utilService = inject(UtilsService);
 
@@ -17,6 +20,7 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
   
   @Input() incidencia: Incidencia;
 
+    // Definición del formulario
   form = new FormGroup({
     cn_id_diagnostico: new FormControl(1),
     cn_id_usuario: new FormControl(null),
@@ -28,6 +32,7 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
     ct_id_img: new FormControl('', [Validators.required]),
   });
 
+    // Método que se ejecuta al inicializar el componente
   ngOnInit() {
 
     this.form.controls.cn_id_incidencia.setValue(this.incidencia['id']);
@@ -48,14 +53,15 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
 
   }
 
+    // Método que se ejecuta al enviar el formulario
   async submit() {
 
     this.form.controls.cf_fecha_hora.setValue(new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }));
     this.crearDiagnostico();
   }
 
-    // Para crear incidencia
-    async crearDiagnostico() {
+  // Método para crear el diagnóstico
+  async crearDiagnostico() {
 
       if (!this.userId) {
         console.error('El UID del usuario no está definido');
@@ -113,7 +119,7 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
         });
     }
 
-  // Para obtener las fotos
+  // Método para obtener las fotos
   async takeImage() {
     const dataUrl = (
       await this.utilService.takePicture('Foto de la incidencia')

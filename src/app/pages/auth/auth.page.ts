@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { administrator } from 'src/app/models/administrator.model';
+import { Location } from '@angular/common'; // Importa Location
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -14,6 +14,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class AuthPage implements OnInit {
   firebaseService = inject(FirebaseService);
   utilService = inject(UtilsService);
+  router = inject(Router);
+  location = inject(Location); // Inyecta Location
 
   form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -27,16 +29,14 @@ export class AuthPage implements OnInit {
       const loading = await this.utilService.loading();
       await loading.present();
 
-      console.log(this.form.value); // Verifica que aquí se imprimen correctamente los valores
       this.firebaseService
         .signIn(this.form.value as User)
         .then((resp) => {
           this.getUserInfo(resp.user.uid);
         })
         .catch((error) => {
-          console.error('Login fallido', error);
           this.utilService.presentToast({
-            message: error.message,
+            message: "Correo o contraseña incorrectos",
             duration: 2500,
             color: 'danger',
             position: 'bottom',
@@ -48,7 +48,6 @@ export class AuthPage implements OnInit {
     }
   }
 
-  //obtiene la informacion del usuario logueado
   async getUserInfo(uid: string) {
     if (this.form.valid) {
       const loading = await this.utilService.loading();
@@ -60,10 +59,12 @@ export class AuthPage implements OnInit {
         .then((user: User | undefined) => {
           if (user) {
             this.utilService.saveLocalStorage('user', user);
-            this.utilService.routerlink('main/home');
+            this.router.navigateByUrl('main/home').then(() => {
+              // Recargar la página de inicio
+              this.location.go(this.location.path());
+              window.location.reload();
+            });
             this.form.reset();
-
-            console.log('ID del usuario logueado',user.cn_id_usuario);
 
             this.utilService.presentToast({
               message: `Bienvenido ${user.ct_nombre}`,
@@ -76,9 +77,8 @@ export class AuthPage implements OnInit {
             throw new Error('Los datos del usuario no están definidos.');
           }
         }).catch(error => {
-          console.error('Error al obtener información del usuario:', error);
           this.utilService.presentToast({
-            message: error.message,
+            message: "Error en datos de usuario",
             duration: 2500,
             color: 'danger',
             position: 'bottom',
@@ -89,6 +89,4 @@ export class AuthPage implements OnInit {
         });
     }
   }
-
-  
 }

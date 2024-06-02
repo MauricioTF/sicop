@@ -1,3 +1,4 @@
+// Importación de módulos y servicios necesarios
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ActualizarIncidenciaComponent } from 'src/app/shared/components/actualizar-incidencia/actualizar-incidencia.component';
@@ -13,6 +14,7 @@ import { Rol } from 'src/app/models/rol.model';
 import { AsignarIncidenciaComponent } from 'src/app/shared/components/asignar-incidencia/asignar-incidencia.component';
 import { Asignaciones } from 'src/app/models/asignaciones.model';
 
+// Decorador de Componente que define metadatos para el componente
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -20,6 +22,7 @@ import { Asignaciones } from 'src/app/models/asignaciones.model';
 })
 export class HomePage implements OnInit {
 
+    // Inyección de servicios y definición de variables
   utilService = inject(UtilsService);
   firebaseService = inject(FirebaseService);
   userId: string | null = null;
@@ -30,6 +33,7 @@ export class HomePage implements OnInit {
   specificRole: any;
   roles: any;
   id_rol_usuario : any;
+  
   tecnico: boolean = false;
   usuario: boolean = false;
   encargado: boolean = false;
@@ -37,31 +41,28 @@ export class HomePage implements OnInit {
   rolesArray: number[] = [];
   cdr = inject(ChangeDetectorRef);
 
-   async ngOnInit() {
+    // Método que se ejecuta al inicializar el componente
+  async ngOnInit() {
+  this.specificRole = await this.getSpecificRole(String(this.user().cn_id_usuario)); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
 
-    this.specificRole = await this.getSpecificRole(String(this.user().cn_id_usuario)); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
-
-    for (let i = 0; i < this.specificRole.length; i++) {
-      this.rolesArray.push(this.specificRole[i].cn_id_rol)
-      }
-
-    console.log("pr : ",this.rolesArray);
-    // this.rolesArray = await this.rolesXusuario();
-
-    this.tecnico = this.rolesArray.includes(4);
-    this.usuario = this.rolesArray.includes(2);
-    this.encargado = this.rolesArray.includes(3);
-
-    this.cdr.detectChanges();
-    // console.log("pruebando : ", this.id_rol_usuario.length);
+  for (let i = 0; i < this.specificRole.length; i++) {
+    this.rolesArray.push(this.specificRole[i].cn_id_rol)
   }
 
-  //para mostrar los incidente pero no tener que recargar
+  this.tecnico = this.rolesArray.includes(4);
+  this.usuario = this.rolesArray.includes(2);
+  this.encargado = this.rolesArray.includes(3);
+
+  this.cdr.detectChanges(); // Forzar la detección de cambios
+}
+
+  // Método que se ejecuta cuando la vista está a punto de entrar y volverse la vista activa
   ionViewWillEnter(){
+    
     this.getIncidencias();
   }
 
-  //para editar incidente
+  // Método para agregar un incidente
   async addUpdateIncident(incidencia?: Incidencia){
 
 
@@ -75,6 +76,7 @@ export class HomePage implements OnInit {
       if(modal) this.getIncidencias();
   }  
 
+    // Método para agregar un diagnóstico
   async addDiagnostico(diagnostico?: Diagnostico, incidencia?: Incidencia){
 
     console.log(incidencia);
@@ -87,12 +89,12 @@ export class HomePage implements OnInit {
 
   }
 
-  //retorna datos del usuario en el local storage
+  // Método para obtener los datos del usuario del almacenamiento local
   user(): User {
     return this.utilService.getLocalStorage('user');
   }
 
-  //llama coleccion de datos (lista de incidencias reportadas)
+  // Método para obtener la lista de incidencias reportadas
   getIncidencias(){
   
     let path;
@@ -127,7 +129,7 @@ export class HomePage implements OnInit {
     });
   }
 
-  // Para refrescar pantalla
+  // Método para refrescar la pantalla
   doRefresh(event : any){
 
     setTimeout(() => {
@@ -136,7 +138,7 @@ export class HomePage implements OnInit {
     }, 1000)
   }
 
-  // ------------------------------------------Obtienen roles del usuario -----------------------
+  // Método para obtener los roles específicos del usuario
   getSpecificRole(cn_id_usuario: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.firebaseService.getRolUsuario().subscribe(
@@ -158,6 +160,7 @@ export class HomePage implements OnInit {
     });
   }
 
+  // Método para obtener los roles
   getNameRol(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.firebaseService.getRol().subscribe(
@@ -174,6 +177,7 @@ export class HomePage implements OnInit {
     });
   }
 
+    // Método para obtener los roles del usuario  logueado
   async rolesXusuario(){
 
     this.roles = await this.getNameRol();//obtiene los roles registrados
@@ -194,8 +198,7 @@ export class HomePage implements OnInit {
     return arr;
   }
   
-
-  // ---------------------------------Asignar inciencia-------------------------------
+  // Método para asignar una incidencia
   async asignarIncidencia(asignaciones?: Asignaciones, incidencia?: Incidencia){
 
     console.log(incidencia);

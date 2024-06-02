@@ -1,41 +1,45 @@
+// Importación de módulos y servicios necesarios
 import { Injectable, inject } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { User } from '../models/user.model';
 import { Incidencia } from '../models/incidencia.model';
-
 import { addDoc, collection, doc, getDoc, getFirestore } from '@angular/fire/firestore';
 import { UtilsService } from './utils.service';
 import {getDownloadURL, getStorage, ref, uploadString} from 'firebase/storage'
 import { Observable } from 'rxjs';
 import { Rol } from '../models/rol.model';
 
+// Decorador Injectable que indica que este servicio puede ser inyectado en otros componentes y servicios
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseService {
 
+  // Inyección de servicios y definición de variables
   auth = inject(AngularFireAuth);
   firestore = inject(AngularFirestore);
   utilsService = inject(UtilsService);
-  dataRef : AngularFirestoreCollection<Incidencia>;//obtiene los datos de la bd
-  dataRefRol : AngularFirestoreCollection<Rol>;//obtiene los datos de la bd
+  dataRef : AngularFirestoreCollection<Incidencia>; // Referencia a la colección de incidencias en Firestore
+  dataRefRol : AngularFirestoreCollection<Rol>; // Referencia a la colección de roles en Firestore
 
+  // Método para obtener la instancia de autenticación de Firebase
   getAuth() {
     return getAuth();
   }
 
+  // Método para iniciar sesión con correo electrónico y contraseña
   signIn(user: User) {
     return signInWithEmailAndPassword(this.getAuth(), user.email, user.password);
   }
 
-  //observable de usuario actual
+  // Método para obtener el usuario actual
   getCurrentUser() {
-    return this.auth.authState; // Retorna un observable con el usuario actual
+    return this.auth.authState; // Retorna un observable con el estado de autenticación del usuario actual
   }
 
-  //para obtener los datos del usuario que se loguea
+  // Método para obtener un documento de Firestore
   async getDocument(path: string) {
     const docRef = doc(getFirestore(), path);
     const docSnap = await getDoc(docRef);
@@ -46,19 +50,19 @@ export class FirebaseService {
     }
   }
 
-  //para cerrar sesion
+  // Método para cerrar sesión
   signOut(){
     getAuth().signOut();
     localStorage.removeItem('user');
     this.utilsService.routerlink('/auth');
   }
 
-  //para almacenar incidencte en la bd
-  addDocument(path: any, data: any){//va a ir enlazado al usuario que crea la incidencia
-
-    return addDoc(collection(getFirestore(), path), data);//add uarda los datos
+  // Método para agregar un documento a Firestore
+  addDocument(path: any, data: any){
+    return addDoc(collection(getFirestore(), path), data);
   }
 
+  // Método para actualizar una imagen en Firebase Storage
   async updateImg(path: any, data_url: any){
     return uploadString(ref(getStorage(), path), data_url, 'data_url')
     .then(() => {
@@ -66,7 +70,7 @@ export class FirebaseService {
     })
   }
 
-  //Obtiene los datos de incidencias de la bd (para ordenarlos)
+  // Método para obtener los datos de una colección de Firestore
   getCollectionData(path: any): AngularFirestoreCollection<Incidencia>{
     this.dataRef = this.firestore.collection(path, ref => ref.orderBy('ct_titulo', 'desc'))
     return this.dataRef;
@@ -77,7 +81,7 @@ export class FirebaseService {
     return this.dataRefRol;
   }
 
-   // Método para obtener datos de la tabla rol_usuario
+  // Método para obtener datos de la tabla rol_usuario
   getRolUsuario(): Observable<any[]> {
     return this.firestore.collection('t_rol_usuario').valueChanges();
   }
@@ -87,8 +91,8 @@ export class FirebaseService {
     return this.firestore.collection('t_roles').valueChanges();
   }
 
-    // Método para obtener datos de la tabla usuarios (para obtener los tecnicos)
-    getTecnicos(): Observable<any[]> {
-      return this.firestore.collection('t_usuarios').valueChanges();
-    }
+  // Método para obtener datos de la tabla usuarios (para obtener los tecnicos)
+  getTecnicos(): Observable<any[]> {
+    return this.firestore.collection('t_usuarios').valueChanges();
+  }
 }

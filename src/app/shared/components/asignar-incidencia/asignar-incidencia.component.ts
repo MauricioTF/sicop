@@ -1,3 +1,4 @@
+// Importación de módulos y servicios necesarios
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -5,13 +6,17 @@ import { Incidencia } from 'src/app/models/incidencia.model';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
+
+// Decorador Component que define la configuración del componente
 @Component({
   selector: 'app-asignar-incidencia',
   templateUrl: './asignar-incidencia.component.html',
   styleUrls: ['./asignar-incidencia.component.scss'],
 })
+
 export class AsignarIncidenciaComponent  implements OnInit {
 
+    // Inyección de servicios y definición de variables
   @Input() incidencia: Incidencia;
 
   firebaseService = inject(FirebaseService);
@@ -30,12 +35,14 @@ export class AsignarIncidenciaComponent  implements OnInit {
   tecnicos: User[] = [];
   selectedTecnicoId: string | null = null;
 
+    // Definición del formulario
   form = new FormGroup({
     cn_id_asignacion_incidencia: new FormControl(1),
     cn_id_usuario: new FormControl(null),
     cn_id_incidencia: new FormControl(null),
   });
 
+    // Método que se ejecuta al inicializar el componente
   async ngOnInit() {
 
     this.form.controls.cn_id_incidencia.setValue(this.incidencia['id']);
@@ -43,6 +50,7 @@ export class AsignarIncidenciaComponent  implements OnInit {
 
   }
 
+    // Método que se ejecuta al enviar el formulario
   async submit() {
 
         // Asignar el valor seleccionado del ion-select al formControl
@@ -54,13 +62,12 @@ export class AsignarIncidenciaComponent  implements OnInit {
     this.asignarIncidencia();
   }
 
-  
-  //retorna datos del usuario en el local storage
+  // Método para obtener el usuario actual
   user(): User {
     return this.utilService.getLocalStorage('user');
   }
 
-  // Para crear incidencia
+  // Método para asignar la incidencia
   async asignarIncidencia() {
 
     let path = `t_asignacion_incidencia/${this.user().cn_id_usuario}/t_asignacion_incidencia`;
@@ -100,11 +107,8 @@ export class AsignarIncidenciaComponent  implements OnInit {
       });
   }
 
-// --------------------------------------obtener datos de los tecnicos
-// -------------------------------------obtener los usuario que tengan el rol de tecnico
-
-// obtenemos todos los usuario registrados
-getTecnicos(): Promise<any> {
+  // Método para obtener los técnicos
+  getTecnicos(): Promise<any> {
   return new Promise((resolve, reject) => {
     this.firebaseService.getTecnicos().subscribe(
       data => {
@@ -120,8 +124,8 @@ getTecnicos(): Promise<any> {
   });
 }
 
-// obtenemos los roles que tiene cada usuario para saber si es técnico
-getSpecificRole(cn_id_usuario: string): Promise<any> {
+  // Método para obtener el rol específico de un usuario
+  getSpecificRole(cn_id_usuario: string): Promise<any> {
   return new Promise((resolve, reject) => {
     this.firebaseService.getRolUsuario().subscribe(
       data => {
@@ -142,6 +146,7 @@ getSpecificRole(cn_id_usuario: string): Promise<any> {
   });
 }
 
+  // Método para obtener los roles de los usuarios
 async rolesXusuario(){
 
   this.usuarios = await this.getTecnicos();//obtiene los roles registrados

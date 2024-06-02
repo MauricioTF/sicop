@@ -1,9 +1,11 @@
+// Importación de módulos y servicios necesarios
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
+// Decorador de Componente que define metadatos para el componente
 @Component({
   selector: 'app-main',
   templateUrl: './main.page.html',
@@ -11,42 +13,35 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class MainPage implements OnInit {
 
-   //para no usar el constructor
-   router = inject(Router);
-   firebaseService = inject(FirebaseService);
-   utilService = inject(UtilsService);
-   //me indica hacia donde estoy navegando
-   currentPath: string = '';
- 
-   //se declaran las rutas hacia donde se quiere desplazar, se crea objeto con sus propiedades
-   //cada uno lleva el titulo del componente hijo, la url donde se ubica cada uno y un icono a eleccion
-   
-   pages  = [
-     {title:'Inicio', url: '/main/home', icon:'home-outline'},
-     {title:'Perfil', url: '/main/profile', icon:'person-outline'},
-     {title:'Registrar usuario', url: '/main/registrar-usuario', icon:'person-outline'}
+  // Inyección de servicios y definición de variables
+  router = inject(Router);
+  firebaseService = inject(FirebaseService);
+  utilService = inject(UtilsService);
+  // Variable que indica la ruta actual
+  currentPath: string = '';
 
-   ]
+  // Definición de las rutas de la aplicación
+  pages  = [
+    {title:'Inicio', url: '/main/home', icon:'home-outline'},
+    {title:'Perfil', url: '/main/profile', icon:'person-outline'},
+    {title:'Registrar usuario', url: '/main/registrar-usuario', icon:'person-outline'}
+  ]
 
-   //esto debe traer la navegacion entre componentes
-   ngOnInit() {
+  // Método que se ejecuta al inicializar el componente
+  ngOnInit() {
+    // Suscripción a los eventos del router para actualizar la ruta actual
+    this.router.events.subscribe((event:any) =>{
+      if(event?.url) this.currentPath = event.url
+    })
+  }
 
-     this.router.events.subscribe((event:any) =>{
-       //consulta si la url a la que se desa acceder existe
-       if(event?.url)this.currentPath = event.url
-      
-     })
-
-   }
-
-   //cierra sesion
-   signOut(){
+  // Método para cerrar la sesión
+  signOut(){
     this.firebaseService.signOut();
-   }
+  }
 
-  //obtiene datos del usuario del local storage
+  // Método para obtener los datos del usuario del almacenamiento local
   user(): User{
     return this.utilService.getLocalStorage('user');
   }
-
 }
