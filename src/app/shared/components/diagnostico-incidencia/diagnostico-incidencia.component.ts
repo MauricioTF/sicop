@@ -27,9 +27,9 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
     cn_id_incidencia: new FormControl(null),
     cf_fecha_hora: new FormControl(null),
     ct_descripcion: new FormControl('', [Validators.required]),
-    ct_tiempo_estimado_solucion: new FormControl('', [Validators.required]),
+    cn_tiempo_estimado_solucion: new FormControl('', [Validators.required]),
     ct_observaciones: new FormControl('', [Validators.required]),
-    ct_id_img: new FormControl('', [Validators.required]),
+    cn_id_img: new FormControl('', [Validators.required]),
   });
 
     // Método que se ejecuta al inicializar el componente
@@ -82,11 +82,11 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
       const loading = await this.utilService.loading();
       await loading.present();
   
-      let dataUrl = this.form.value.ct_id_img;//valor de la imagen seleccionada
+      let dataUrl = this.form.value.cn_id_img;//valor de la imagen seleccionada
       let imgPath = `${this.userId}/${Date.now()}`//path unico para la imagen
       let imgUrl = await this.firebaseService.updateImg(imgPath, dataUrl);
    
-      this.form.controls.ct_id_img.setValue(imgUrl);
+      this.form.controls.cn_id_img.setValue(imgUrl);
       //delete this.form.value.cn_id_incidencia; // Elimina el id y toma el uid creado
     
       this.firebaseService
@@ -122,8 +122,8 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
   // Método para obtener las fotos
   async takeImage() {
     const dataUrl = (
-      await this.utilService.takePicture('Foto de la incidencia')
+      await this.utilService.takePicture('Foto para el diagnostico')
     ).dataUrl; // Extrae la respuesta que se selecciona
-    this.form.controls.ct_id_img.setValue(dataUrl);
+    this.form.controls.cn_id_img.setValue(dataUrl);
   }
 }

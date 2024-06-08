@@ -2,12 +2,12 @@
 
 <ion-content class="content">
   <div class="logo-container">
-    <ion-avatar class="logo-avatar" *ngIf="form.value.ct_id_img">
-      <img [src]="form.value.ct_id_img" />
+    <ion-avatar class="logo-avatar" *ngIf="form.value.cn_id_img">
+      <img [src]="form.value.cn_id_img" />
     </ion-avatar>
     <ion-icon
       class="img-icon"
-      *ngIf="!form.value.ct_id_img"
+      *ngIf="!form.value.cn_id_img"
       name="image-outline"
     ></ion-icon>
   </div>
@@ -72,19 +72,19 @@
       vt_auto_complete="ct_tiempo_estimado_solucion"
       vt_type="text"
       vt_label="Tiempo estimado de solucion"
-      [control]="form.controls.ct_tiempo_estimado_solucion"
+      [control]="form.controls.cn_tiempo_estimado_solucion"
     >
     </app-login-input>
 
     <div
       class="validators"
       *ngIf="
-        form.controls.ct_tiempo_estimado_solucion.errors &&
-        form.controls.ct_tiempo_estimado_solucion.touched
+        form.controls.cn_tiempo_estimado_solucion.errors &&
+        form.controls.cn_tiempo_estimado_solucion.touched
       "
     >
       <div
-        *ngIf="form.controls.ct_tiempo_estimado_solucion.errors?.['required']"
+        *ngIf="form.controls.cn_tiempo_estimado_solucion.errors?.['required']"
       >
         Es necesario un tiempo estimado para la solucion del incidente
       </div>

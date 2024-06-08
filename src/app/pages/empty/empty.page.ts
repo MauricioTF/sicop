@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-empty',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EmptyPage implements OnInit {
 
-  constructor() { }
+  router = inject(Router); // Inyecta Router
 
   ngOnInit() {
+      //cuando inicie sesion pase a auth
+      setTimeout(() => {
+        this.router.navigateByUrl('main/home');
+      }, 1000);
   }
 
 }

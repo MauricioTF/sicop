@@ -59,11 +59,14 @@ export class AuthPage implements OnInit {
         .then((user: User | undefined) => {
           if (user) {
             this.utilService.saveLocalStorage('user', user);
-            this.router.navigateByUrl('main/home').then(() => {
+            setTimeout(() => {
+              this.router.navigateByUrl('main/home');
+            }, 1);
+            // this.router.navigateByUrl('main/home').then(() => {
               // Recargar la página de inicio
-              this.location.go(this.location.path());
-              window.location.reload();
-            });
+              // this.location.go(this.location.path());
+              // window.location.reload();
+            // });
             this.form.reset();
 
             this.utilService.presentToast({
@@ -72,10 +75,13 @@ export class AuthPage implements OnInit {
               color: 'primary',
               position: 'bottom',
               icon: 'person-circle-outline'
+              
             });
+          
           } else {
             throw new Error('Los datos del usuario no están definidos.');
           }
+
         }).catch(error => {
           this.utilService.presentToast({
             message: "Error en datos de usuario",

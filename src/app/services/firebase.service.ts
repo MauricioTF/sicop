@@ -10,6 +10,7 @@ import { UtilsService } from './utils.service';
 import {getDownloadURL, getStorage, ref, uploadString} from 'firebase/storage'
 import { Observable } from 'rxjs';
 import { Rol } from '../models/rol.model';
+import { Diagnostico } from '../models/diagnostico.model';
 
 // Decorador Injectable que indica que este servicio puede ser inyectado en otros componentes y servicios
 @Injectable({
@@ -23,7 +24,7 @@ export class FirebaseService {
   utilsService = inject(UtilsService);
   dataRef : AngularFirestoreCollection<Incidencia>; // Referencia a la colección de incidencias en Firestore
   dataRefRol : AngularFirestoreCollection<Rol>; // Referencia a la colección de roles en Firestore
-
+  dataRefDiag : AngularFirestoreCollection<Diagnostico>
   // Método para obtener la instancia de autenticación de Firebase
   getAuth() {
     return getAuth();
@@ -72,9 +73,16 @@ export class FirebaseService {
 
   // Método para obtener los datos de una colección de Firestore
   getCollectionData(path: any): AngularFirestoreCollection<Incidencia>{
-    this.dataRef = this.firestore.collection(path, ref => ref.orderBy('ct_titulo', 'desc'))
+    this.dataRef = this.firestore.collection(path, ref => ref.orderBy('cf_fecha_hora', 'asc'))
     return this.dataRef;
   }
+
+    // Método para obtener los datos de una colección de Firestore
+    getCollectionDataDiagnosticos(path: any): AngularFirestoreCollection<Diagnostico>{
+      this.dataRefDiag = this.firestore.collection(path, ref => ref.orderBy('cf_fecha_hora', 'asc'))
+      return this.dataRefDiag;
+    }
+
 
   getCollectionDataRol(path: any): AngularFirestoreCollection<Rol>{
     this.dataRefRol = this.firestore.collection(path, ref => ref.orderBy('cn_id_rol', 'desc'))

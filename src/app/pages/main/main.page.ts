@@ -23,7 +23,7 @@ export class MainPage implements OnInit {
   // Definición de las rutas de la aplicación
   pages  = [
     {title:'Inicio', url: '/main/home', icon:'home-outline'},
-    {title:'Perfil', url: '/main/profile', icon:'person-outline'},
+    {title:'Diagnosticos', url: '/main/profile', icon:'person-outline'},
     {title:'Registrar usuario', url: '/main/registrar-usuario', icon:'person-outline'}
   ]
 

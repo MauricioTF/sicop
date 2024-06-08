@@ -1,1 +1,57 @@
-<app-headers [vb_show_menu]="true" vt_title="Pagina de perfil"> </app-headers>
+<app-headers [vb_show_menu]="true" vt_title="Diagnosticos"> </app-headers>
+ 
+<ion-content>
+
+  <!-- ------------------------Para refrescar pantalla --------------------------------->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Si no está cargando el loading van a aparecer todos los datos -->
+  <ion-list *ngIf="!loading">
+    <!-- Para mostrar todos los item -->
+    <ion-item-sliding class="product-item" *ngFor="let diagnostico of diagnostico">
+      <ion-item>
+        <ion-avatar slot="start">
+          <img [src]="diagnostico.cn_id_img" alt="">
+        </ion-avatar>
+          <ion-label>
+            <div class="name">{{diagnostico.cf_fecha_hora}}</div>
+            <div class="data">
+              <strong>Descripción:</strong>{{diagnostico.ct_descripcion}}
+              <strong>Observaciones:</strong>{{diagnostico.ct_observaciones}}
+              <strong>tiempo estimado de solucion:</strong>{{diagnostico.cn_tiempo_estimado_solucion}}
+            </div>
+          </ion-label>
+      </ion-item>
+
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- -------------------------Para cuando los datos están cargando (es solo una animacion) ------------------->
+  <ion-list *ngIf="loading">
+    <!-- Para mostrar todos los item -->
+    <ion-item-sliding class="product-item" *ngFor="let incidencia of [1,1,1,1,1,1,1]">
+      <ion-item>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated style="width: 100%; height : 100%"></ion-skeleton-text>
+        </ion-avatar>
+          <ion-label>
+            <div>
+              <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+            </div>
+          </ion-label>
+      </ion-item>
+
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- ---------------------------------------- Para cuandno no hay incidencias   ------------------------ -->
+  
+  <div class="empty" *ngIf="!loading && !diagnostico.length">
+    <ion-icon name="sunny"></ion-icon>
+    <h3>No hay diagnosticos registrados</h3>
+  </div>
+
+</ion-content>
