@@ -97,8 +97,10 @@ export class ActualizarIncidenciaComponent implements OnInit {
  
     this.form.controls.ct_id_img.setValue(imgUrl);
     //delete this.form.value.cn_id_incidencia; // Elimina el id y toma el uid creado
+    
 
     console.log('Datos del formulario antes de agregar:', this.form.value);
+
 
     this.firebaseService
       .addDocument(path, this.form.value)

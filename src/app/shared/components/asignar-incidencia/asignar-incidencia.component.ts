@@ -30,15 +30,17 @@ export class AsignarIncidenciaComponent  implements OnInit {
 
   specificRole: any;
   usuarios: any;
+  asignacion: any;
   id_rol_usuario : any;
 
   tecnicos: User[] = [];
   selectedTecnicoId: string | null = null;
+  u_asignaciones = [];
 
     // Definición del formulario
   form = new FormGroup({
     cn_id_asignacion_incidencia: new FormControl(1),
-    cn_id_usuario: new FormControl(null),
+    cn_id_usuario: new FormControl(null, [Validators.required]),
     cn_id_incidencia: new FormControl(null),
   });
 
@@ -48,7 +50,17 @@ export class AsignarIncidenciaComponent  implements OnInit {
     this.form.controls.cn_id_incidencia.setValue(this.incidencia['id']);
     this.tecnicos = await this.rolesXusuario();
 
+    for (let i = 0; i < this.u_asignaciones.length; i++) {
+      for (let j = 0; j < this.tecnicos.length; j++) {
+        if(this.u_asignaciones[i].cn_id_incidencia === this.incidencia['id'] && this.tecnicos[j].cn_id_usuario === this.u_asignaciones[i].cn_id_usuario){
+          console.log("asigna ", this.u_asignaciones[i].cn_id_usuario);
+          this.tecnicos.splice(j, 1);
+          console.log("tec ", this.tecnicos);
+      }
+      
+    }
   }
+}
 
     // Método que se ejecuta al enviar el formulario
   async submit() {
@@ -152,9 +164,17 @@ async rolesXusuario(){
   this.usuarios = await this.getTecnicos();//obtiene los roles registrados
 
   let u_tecnios = [];
+  
 
   // recorro los tecnicos para acceder a sus id
   for (let i = 0; i < this.usuarios.length; i++) {
+
+    this.asignacion = await this.getAsignaciones(this.usuarios[i].cn_id_usuario);//obtiene las asignaciones registradas
+   
+    for (let j = 0; j < this.asignacion.length; j++) {
+      // console.log("Asignaciones ",this.asignacion);  
+      this.u_asignaciones.push(this.asignacion[j]);
+    }
 
     // asignamos a specific rol el rol con cada usuario
     this.specificRole = await this.getSpecificRole(this.usuarios[i].cn_id_usuario); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
@@ -171,9 +191,26 @@ async rolesXusuario(){
   }
 
 }
+
   console.log("Usuarios con rol de tecnico ",u_tecnios);
 
    return u_tecnios;
+}
+
+getAsignaciones(uid): Promise<any> {
+  return new Promise((resolve, reject) => {
+    this.firebaseService.getAsignaciones(uid).subscribe(
+      data => {
+        const asignacion = data;
+       resolve(asignacion);
+        // console.log("Todos las asig ",asignacion);
+      },
+      error => {
+        console.error('Error al obtener roles:', error);
+        reject(error); // Rechaza la promesa en caso de error
+      }
+    );
+  });
 }
 
 }

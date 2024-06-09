@@ -126,4 +126,6 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
     ).dataUrl; // Extrae la respuesta que se selecciona
     this.form.controls.cn_id_img.setValue(dataUrl);
   }
+
+  
 }

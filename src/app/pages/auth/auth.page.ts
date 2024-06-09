@@ -61,7 +61,7 @@ export class AuthPage implements OnInit {
             this.utilService.saveLocalStorage('user', user);
             setTimeout(() => {
               this.router.navigateByUrl('main/home');
-            }, 1);
+            }, 1000);
             // this.router.navigateByUrl('main/home').then(() => {
               // Recargar la página de inicio
               // this.location.go(this.location.path());
