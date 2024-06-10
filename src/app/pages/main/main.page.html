@@ -1,17 +1,15 @@
 <ion-menu contentId="menu-content" menuId="menu-content" side="start">
-
   <app-headers vt_title="Menú"> </app-headers>
 
-<ion-content class="ion-text-center">
+  <ion-content class="ion-text-center">
+    <ion-avatar>
+      <ion-icon class="empty-icon" name="person-circle-outline"></ion-icon>
+    </ion-avatar>
+    <h5>{{user()?.ct_nombre}}</h5>
 
-  <ion-avatar>
-    <ion-icon class="empty-icon" name="person-circle-outline"></ion-icon>
-  </ion-avatar>
-  <h5>{{user()?.ct_nombre}}</h5>
-
-
-  <ion-menu-toggle autoHide="false" *ngFor="let p of pages">
+    <!-- <ion-menu-toggle autoHide="false" *ngFor="let p of pages">
     <ion-item
+      *ngIf="p.visible"
       [ngClass]="{'activate': currentPath === p.url}"
       [routerLink]="p.url"
       routerDirection="root"
@@ -20,25 +18,103 @@
       <ion-icon slot="start" [name]="p.icon"></ion-icon>
       <ion-label>{{p.title}}</ion-label>
     </ion-item>
-  </ion-menu-toggle>
-</ion-content>
+  </ion-menu-toggle> -->
 
-<ion-footer class="ion-no-border safe-p-bottom">
-  <ion-toolbar auto-hide="false">
-    <ion-item>
-      <ion-item (click)="signOut()" lines="none">
-        <ion-icon slot="start" name="log-out-outline"></ion-icon>
-        <ion-label>
-          Cerrar sesión
-        </ion-label>
+    <!-- si el usuario logueado es administrador, muestra usuarios -->
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        *ngIf="administrador"
+        [ngClass]="{'activate': currentPath === '/main/profile'}"
+        [routerLink]="['/main/profile']"
+        routerDirection="root"
+        detail
+      >
+        <ion-icon slot="start" name="person-outline"></ion-icon>
+        <ion-label>Usuarios</ion-label>
       </ion-item>
-    </ion-item>
-  </ion-toolbar>
-</ion-footer>
+    </ion-menu-toggle>
 
+    <!-- si el usuario tiene rol usuario, muestra sus incidencias -->
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        [ngClass]="{'activate': currentPath === '/main/home'}"
+        [routerLink]="['/main/home']"
+        routerDirection="root"
+        detail
+      >
+        <ion-icon slot="start" name="home-outline"></ion-icon>
+        <ion-label>Mis incidencias</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+
+    <!-- si el usuario es encargado -->
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        *ngIf="encargado"
+        [ngClass]="{'activate': currentPath === '/main/incidencias-reportadas'}"
+        [routerLink]="['/main/incidencias-reportadas']"
+        routerDirection="root"
+        detail
+      >
+        <ion-icon slot="start" name="home-outline"></ion-icon>
+        <ion-label>Incidencias reportadas</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+
+    <!-- Si el usuario logueado es tecnico, muestra las incidencias asignadas -->
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        *ngIf="tecnico"
+        [ngClass]="{'activate': currentPath === '/main/profile'}"
+        [routerLink]="['/main/profile']"
+        routerDirection="root"
+        detail
+      >
+        <ion-icon slot="start" name="person-outline"></ion-icon>
+        <ion-label>Incidencias asignadas</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+
+    <!-- Si el usuario logueado es tecnico, muestra los diagnosticos -->
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        *ngIf="tecnico"
+        [ngClass]="{'activate': currentPath === '/main/profile'}"
+        [routerLink]="['/main/profile']"
+        routerDirection="root"
+        detail
+      >
+        <ion-icon slot="start" name="person-outline"></ion-icon>
+        <ion-label>Diagnosticos</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+
+    <!-- si el usuario es supervisor, muestra las incidencias finalizadas por el tecnico -->
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        *ngIf="supervisor"
+        [ngClass]="{'activate': currentPath === '/main/profile'}"
+        [routerLink]="['/main/profile']"
+        routerDirection="root"
+        detail
+      >
+        <ion-icon slot="start" name="person-outline"></ion-icon>
+        <ion-label>Incidencias finalizadas</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+  </ion-content>
+  <!-- ------------------------------------------------------------------------------------------ -->
+
+  <ion-footer class="ion-no-border safe-p-bottom">
+    <ion-toolbar auto-hide="false">
+      <ion-item>
+        <ion-item (click)="signOut()" lines="none">
+          <ion-icon slot="start" name="log-out-outline"></ion-icon>
+          <ion-label> Cerrar sesión </ion-label>
+        </ion-item>
+      </ion-item>
+    </ion-toolbar>
+  </ion-footer>
 </ion-menu>
 
-<ion-router-outlet id="menu-content" main>
-
-</ion-router-outlet>
-
+<ion-router-outlet id="menu-content" main> </ion-router-outlet>

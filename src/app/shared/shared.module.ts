@@ -21,7 +21,7 @@ import { AsignarIncidenciaComponent } from './components/asignar-incidencia/asig
     ActualizarIncidenciaComponent,
     DiagnosticoIncidenciaComponent,
     RegistrarUsuarioComponent,
-    AsignarIncidenciaComponent
+    AsignarIncidenciaComponent,
   ],
   exports: [
     HeadersComponent,
@@ -34,7 +34,7 @@ import { AsignarIncidenciaComponent } from './components/asignar-incidencia/asig
     ReactiveFormsModule,
     DiagnosticoIncidenciaComponent,
     RegistrarUsuarioComponent,
-    AsignarIncidenciaComponent
+    AsignarIncidenciaComponent,
   ],
   imports: [
     CommonModule,

@@ -136,28 +136,6 @@ export class AsignarIncidenciaComponent  implements OnInit {
   });
 }
 
-  // Método para obtener el rol específico de un usuario
-  getSpecificRole(cn_id_usuario: string): Promise<any> {
-  return new Promise((resolve, reject) => {
-    this.firebaseService.getRolUsuario().subscribe(
-      data => {
-        const specificRole = data.filter(role => role.cn_id_usuario === cn_id_usuario);
-        if (specificRole) {
-          // console.log(`Rol de ${cn_id_rol}:`, specificRole);
-          resolve(specificRole);
-        } else {
-          // console.log(`Rol de ${cn_id_rol} no encontrado`);
-          resolve(null); // Resuelve con null si no se encuentra el rol
-        }
-      },
-      error => {
-        console.error('Error al obtener roles:', error);
-        reject(error); // Rechaza la promesa en caso de error
-      }
-    );
-  });
-}
-
   // Método para obtener los roles de los usuarios
 async rolesXusuario(){
 
@@ -177,7 +155,7 @@ async rolesXusuario(){
     }
 
     // asignamos a specific rol el rol con cada usuario
-    this.specificRole = await this.getSpecificRole(this.usuarios[i].cn_id_usuario); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
+    this.specificRole = await this.firebaseService.getSpecificRole(this.usuarios[i].cn_id_usuario); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
 
   // recorremos a los roles de cada usuario
   for (let j = 0; j < this.specificRole.length; j++) {

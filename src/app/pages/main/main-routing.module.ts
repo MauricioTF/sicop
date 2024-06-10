@@ -18,10 +18,14 @@ const routes: Routes = [
         loadChildren: () =>
           import('./profile/profile.module').then((m) => m.ProfilePageModule),
       },
+      {
+        path: 'incidencias-reportadas',
+        loadChildren: () => import('./incidencias-reportadas/incidencias-reportadas.module').then( m => m.IncidenciasReportadasPageModule)
+      },
     
     ],
   },
- 
+
 
 ];
 

@@ -107,5 +107,47 @@ export class FirebaseService {
   getAsignaciones(uid): Observable<any[]> {
     return this.firestore.collection('t_asignacion_incidencia/'+uid+'/t_asignacion_incidencia').valueChanges();
   }
+
+  getIncidenciasReportadas(uid): Observable<any[]> {
+    return this.firestore.collection('t_asignacion_incidencia/'+uid+'/t_asignacion_incidencia').valueChanges();
+  }
   
+  //////////////////////////////////////
+    // Método para obtener los roles específicos del usuario
+    getSpecificRole(cn_id_usuario: string): Promise<any> {
+      return new Promise((resolve, reject) => {
+        this.getRolUsuario().subscribe(
+          data => {
+            const specificRole = data.filter(role => role.cn_id_usuario === cn_id_usuario);
+            if (specificRole) {
+              // console.log(`Rol de ${cn_id_rol}:`, specificRole);
+              resolve(specificRole);
+            } else {
+              // console.log(`Rol de ${cn_id_rol} no encontrado`);
+              resolve(null); // Resuelve con null si no se encuentra el rol
+            }
+          },
+          error => {
+            console.error('Error al obtener roles:', error);
+            reject(error); // Rechaza la promesa en caso de error
+          }
+        );
+      });
+    }
+
+    getNameRol(): Promise<any> {
+      return new Promise((resolve, reject) => {
+        this.getRol().subscribe(
+          data => {
+            const rolesA = data;
+           resolve(rolesA);
+  
+          },
+          error => {
+            console.error('Error al obtener roles:', error);
+            reject(error); // Rechaza la promesa en caso de error
+          }
+        );
+      });
+    }
 }

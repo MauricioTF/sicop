@@ -43,7 +43,8 @@ export class HomePage implements OnInit {
 
     // Método que se ejecuta al inicializar el componente
   async ngOnInit() {
-  this.specificRole = await this.getSpecificRole(String(this.user().cn_id_usuario)); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
+
+  this.specificRole = await this.firebaseService.getSpecificRole(String(this.user().cn_id_usuario)); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
 
   for (let i = 0; i < this.specificRole.length; i++) {
     this.rolesArray.push(this.specificRole[i].cn_id_rol)
@@ -138,50 +139,50 @@ export class HomePage implements OnInit {
     }, 1000)
   }
 
-  // Método para obtener los roles específicos del usuario
-  getSpecificRole(cn_id_usuario: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.firebaseService.getRolUsuario().subscribe(
-        data => {
-          const specificRole = data.filter(role => role.cn_id_usuario === cn_id_usuario);
-          if (specificRole) {
-            // console.log(`Rol de ${cn_id_rol}:`, specificRole);
-            resolve(specificRole);
-          } else {
-            // console.log(`Rol de ${cn_id_rol} no encontrado`);
-            resolve(null); // Resuelve con null si no se encuentra el rol
-          }
-        },
-        error => {
-          console.error('Error al obtener roles:', error);
-          reject(error); // Rechaza la promesa en caso de error
-        }
-      );
-    });
-  }
+  // // Método para obtener los roles específicos del usuario
+  // getSpecificRole(cn_id_usuario: string): Promise<any> {
+  //   return new Promise((resolve, reject) => {
+  //     this.firebaseService.getRolUsuario().subscribe(
+  //       data => {
+  //         const specificRole = data.filter(role => role.cn_id_usuario === cn_id_usuario);
+  //         if (specificRole) {
+  //           // console.log(`Rol de ${cn_id_rol}:`, specificRole);
+  //           resolve(specificRole);
+  //         } else {
+  //           // console.log(`Rol de ${cn_id_rol} no encontrado`);
+  //           resolve(null); // Resuelve con null si no se encuentra el rol
+  //         }
+  //       },
+  //       error => {
+  //         console.error('Error al obtener roles:', error);
+  //         reject(error); // Rechaza la promesa en caso de error
+  //       }
+  //     );
+  //   });
+  // }
 
-  // Método para obtener los roles
-  getNameRol(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.firebaseService.getRol().subscribe(
-        data => {
-          const rolesA = data;
-         resolve(rolesA);
+  // // Método para obtener los roles
+  // getNameRol(): Promise<any> {
+  //   return new Promise((resolve, reject) => {
+  //     this.firebaseService.getRol().subscribe(
+  //       data => {
+  //         const rolesA = data;
+  //        resolve(rolesA);
 
-        },
-        error => {
-          console.error('Error al obtener roles:', error);
-          reject(error); // Rechaza la promesa en caso de error
-        }
-      );
-    });
-  }
+  //       },
+  //       error => {
+  //         console.error('Error al obtener roles:', error);
+  //         reject(error); // Rechaza la promesa en caso de error
+  //       }
+  //     );
+  //   });
+  // }
 
     // Método para obtener los roles del usuario  logueado
   async rolesXusuario(){
 
-    this.roles = await this.getNameRol();//obtiene los roles registrados
-    this.specificRole = await this.getSpecificRole(String(this.user().cn_id_usuario)); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
+    this.roles = await this.firebaseService.getNameRol();//obtiene los roles registrados
+    this.specificRole = await this.firebaseService.getSpecificRole(String(this.user().cn_id_usuario)); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
 
     let arr = [];
     for (let i = 0; i < this.specificRole.length; i++) {
