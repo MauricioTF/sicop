@@ -64,6 +64,7 @@ async getIncidencias() {
 
   this.firebaseService.getCurrentUser().subscribe((user) => {
     if (user) {
+      
       let allIncidencias = []; // Lista para acumular todas las incidencias
       let processedUsers = 0; // Contador para usuarios procesados
 
@@ -74,7 +75,7 @@ async getIncidencias() {
         this.loading = true;
 
         this.firebaseService
-          .getCollectionData(path)
+          .getCollectionDataIncidencia(path)
           .snapshotChanges()
           .pipe(
             map((changes) =>

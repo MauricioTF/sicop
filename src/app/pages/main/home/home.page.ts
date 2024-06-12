@@ -108,7 +108,7 @@ export class HomePage implements OnInit {
         
         this.loading = true;
 
-        let sub = this.firebaseService.getCollectionData(path)
+        let sub = this.firebaseService.getCollectionDataIncidencia(path)
         .snapshotChanges().pipe(
           map(changes => changes.map( c => ({
             id: c.payload.doc.id,
@@ -117,6 +117,7 @@ export class HomePage implements OnInit {
         ).subscribe({
           next: (resp: any) => {
             this.incidencia = resp;
+
             this.loading = false;
             sub.unsubscribe();
           }

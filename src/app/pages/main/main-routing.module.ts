@@ -22,9 +22,13 @@ const routes: Routes = [
         path: 'incidencias-reportadas',
         loadChildren: () => import('./incidencias-reportadas/incidencias-reportadas.module').then( m => m.IncidenciasReportadasPageModule)
       },
-    
+      {
+        path: 'incidencias-asignadas',
+        loadChildren: () => import('./incidencias-asignadas/incidencias-asignadas.module').then( m => m.IncidenciasAsignadasPageModule)
+      },
     ],
   },
+
 
 
 ];
