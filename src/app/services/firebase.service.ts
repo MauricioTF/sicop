@@ -40,6 +40,7 @@ export class FirebaseService {
   dataRefRol: AngularFirestoreCollection<Rol>; // Referencia a la colección de roles en Firestore
   dataRefDiag: AngularFirestoreCollection<Diagnostico>;
   dataIncidenciasAsignadas: AngularFirestoreCollection<Asignaciones>;
+  dataUsuarios: AngularFirestoreCollection<User>;
 
   // Método para obtener la instancia de autenticación de Firebase
   getAuth() {
@@ -92,6 +93,14 @@ export class FirebaseService {
     );
   }
 
+    // Método para obtener los datos de una colección de Firestore
+    getCollectionDataUsuarios(path: any): AngularFirestoreCollection<User> {
+      this.dataUsuarios = this.firestore.collection(path, (ref) =>
+        ref.orderBy('ct_nombre', 'asc')
+      );
+      return this.dataUsuarios;
+    }
+    
   // Método para obtener los datos de una colección de Firestore
   getCollectionDataIncidencia(path: any): AngularFirestoreCollection<Incidencia> {
     this.dataRef = this.firestore.collection(path, (ref) =>
@@ -148,12 +157,6 @@ export class FirebaseService {
       .valueChanges();
   }
 
-  getIncidenciasReportadas(uid): Observable<any[]> {
-    return this.firestore
-      .collection('t_asignacion_incidencia/' + uid + '/t_asignacion_incidencia')
-      .valueChanges();
-  }
-
   //////////////////////////////////////
   // Método para obtener los roles específicos del usuario
   getSpecificRole(cn_id_usuario: string): Promise<any> {
@@ -194,28 +197,4 @@ export class FirebaseService {
     });
   }
 
-
-  // ////////////////
-  getSpecificAignation(cn_id_usuario: string, cn_id_incidencia: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.getIncidenciasReportadas(cn_id_usuario).subscribe(
-        (data) => {
-          const specificRole = data.filter(
-            (role) => role.cn_id_incidencia === cn_id_incidencia
-          );
-          if (specificRole) {
-            // console.log(`Rol de ${cn_id_rol}:`, specificRole);
-            resolve(specificRole);
-          } else {
-            // console.log(`Rol de ${cn_id_rol} no encontrado`);
-            resolve(null); // Resuelve con null si no se encuentra el rol
-          }
-        },
-        (error) => {
-          console.error('Error al obtener roles:', error);
-          reject(error); // Rechaza la promesa en caso de error
-        }
-      );
-    });
-  }
 }

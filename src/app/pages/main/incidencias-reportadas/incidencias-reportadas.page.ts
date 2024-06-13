@@ -133,6 +133,9 @@ async getIncidencias() {
       componentProps: {asignaciones, incidencia}
     })
   }
+  // Al asignar tecnico debe agregar prioridad, riesgo, afectación y categoría
   
+
+  // El encargado hacer cierre de incidencias ///////////////////////////
 
 }
