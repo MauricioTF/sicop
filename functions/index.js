@@ -25,7 +25,7 @@ exports.sendEmail = functions.https.onRequest((req, res) => {
     }
 
     const mailOptions = {
-      from: 'sistemagestionincidencias@ucr.ac.cr', // Reemplaza con tu correo
+      from: 'otrascuentas99@gmail.com', // Reemplaza con tu correo
       to: to,
       subject: subject,
       text: body,
