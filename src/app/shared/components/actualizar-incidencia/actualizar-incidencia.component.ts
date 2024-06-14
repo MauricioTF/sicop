@@ -94,7 +94,7 @@ export class ActualizarIncidenciaComponent implements OnInit {
     let dataUrl = this.form.value.ct_id_img;//valor de la imagen seleccionada
     let imgPath = `${this.userId}/${Date.now()}`//path unico para la imagen
     let imgUrl = await this.firebaseService.updateImg(imgPath, dataUrl);
- 
+
     this.form.controls.ct_id_img.setValue(imgUrl);
     //delete this.form.value.cn_id_incidencia; // Elimina el id y toma el uid creado
     
