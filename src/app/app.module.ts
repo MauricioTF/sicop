@@ -10,6 +10,8 @@ import {AngularFirestoreModule} from '@angular/fire/compat/firestore';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
 
 //de la base de datos en firebase
 //para poder hacer uso de los datos en firebase
@@ -31,7 +33,8 @@ initializeApp(firebaseConfig);
     IonicModule.forRoot({mode: 'md'}),
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    HttpClientModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

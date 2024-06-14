@@ -66,11 +66,11 @@ export class HomePage implements OnInit {
   // Método para agregar un incidente
   async addUpdateIncident(incidencia?: Incidencia){
 
-
     let modal = await this.utilService.getModal({
       component: ActualizarIncidenciaComponent,
       cssClass: 'add-update-modal',
       componentProps: {incidencia}
+      
     })
     
       // para que cargue automaticamente los incidentes agregados
@@ -117,12 +117,12 @@ export class HomePage implements OnInit {
         ).subscribe({
           next: (resp: any) => {
             this.incidencia = resp;
-
             this.loading = false;
             sub.unsubscribe();
           }
         })
         this.firebaseService.getDocument(userPath).then(userData => {
+          
           // Si necesitas otros datos del usuario, puedes manejarlos aquí
         }).catch(error => {
           console.error('Error obteniendo datos de usuario:', error);

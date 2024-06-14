@@ -69,6 +69,22 @@ export class ActualizarIncidenciaComponent implements OnInit {
     this.crearIncidencia();
   }
 
+  sendEmail(){
+    this.firebaseService.sendEmail("torresfernandezmauricio18@gmail.com", "Incidencia", "Se ha reportado una incidencia")
+    .subscribe(
+      response => {
+        // console.log("Respuesta del servidor:", response);
+        // Maneja la respuesta según sea necesario, aquí solo estamos imprimiendo en consola
+        // Puedes realizar alguna acción según la respuesta, aunque en este caso es un texto de éxito
+      },
+      error => {
+        // console.error("Error al enviar el email:", error);
+        // Maneja el error apropiadamente
+      }
+    );
+  
+  }
+  
   // Método para crear la incidencia
   async crearIncidencia() {
 
@@ -106,7 +122,7 @@ export class ActualizarIncidenciaComponent implements OnInit {
       .addDocument(path, this.form.value)
       .then(async (resp) => {
         this.utilService.dismissModal({ success: true });//para cerrar el modal automaticamente
-
+        this.sendEmail();
         //mensaje de exito al guardar los datos
         this.utilService.presentToast({
           message: 'Incidencia agregada de manera exitosa',

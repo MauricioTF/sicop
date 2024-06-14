@@ -26,6 +26,7 @@ import { Observable } from 'rxjs';
 import { Rol } from '../models/rol.model';
 import { Diagnostico } from '../models/diagnostico.model';
 import { Asignaciones } from '../models/asignaciones.model';
+import { HttpClient } from '@angular/common/http';
 
 // Decorador Injectable que indica que este servicio puede ser inyectado en otros componentes y servicios
 @Injectable({
@@ -36,11 +37,23 @@ export class FirebaseService {
   auth = inject(AngularFireAuth);
   firestore = inject(AngularFirestore);
   utilsService = inject(UtilsService);
+  http = inject(HttpClient);
+
   dataRef: AngularFirestoreCollection<Incidencia>; // Referencia a la colección de incidencias en Firestore
   dataRefRol: AngularFirestoreCollection<Rol>; // Referencia a la colección de roles en Firestore
   dataRefDiag: AngularFirestoreCollection<Diagnostico>;
   dataIncidenciasAsignadas: AngularFirestoreCollection<Asignaciones>;
   dataUsuarios: AngularFirestoreCollection<User>;
+
+  //para el envio de correos
+  // http = inject(HttpClient);
+  private apiUrl = 'https://us-central1-sicop-is.cloudfunctions.net/sendEmail'; // Reemplaza con tu URL de función
+  
+  sendEmail(to:string, subject: string, body:string): Observable<any> {
+
+    const emailData = { to, subject, body};
+    return this.http.post(this.apiUrl, emailData);
+  }
 
   // Método para obtener la instancia de autenticación de Firebase
   getAuth() {
