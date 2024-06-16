@@ -9,6 +9,8 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { User } from '../models/user.model';
 import { Incidencia } from '../models/incidencia.model';
 import {
+  CollectionReference,
+  DocumentData,
   addDoc,
   collection,
   doc,

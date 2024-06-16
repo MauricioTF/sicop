@@ -6,26 +6,26 @@ const cors = require('cors')({ origin: true });
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'sistemadegestiondeincidencias@gmail.com', // Reemplaza con tu correo de Gmail
-    pass: 'd c w v w vi p m r m g t d p r', // Reemplaza con la contraseña de aplicación generada
+    user: 'sistemadegestiondeincidencias@gmail.com', 
+    pass: 'd c w v w vi p m r m g t d p r',
   },
 });
 
 exports.sendEmail = functions.https.onRequest((req, res) => {
-  // Usar CORS para permitir solicitudes desde cualquier origen durante el desarrollo
+
   cors(req, res, () => {
     if (req.method !== 'POST') {
-      // return res.status(400).send('Method Not Allowed');
+      return res.status(400).send('Method Not Allowed');
     }
 
     const { to, subject, body } = req.body;
 
     if (!to || !subject || !body) {
-      // return res.status(400).send('Missing parameters: "to", "subject", or "body"');
+      return res.status(400).send('Missing parameters: "to", "subject", or "body"');
     }
 
     const mailOptions = {
-      from: 'sistemadegestiondeincidencias@gmail.com', // Reemplaza con tu correo
+      from: 'sistemadegestiondeincidencias@gmail.com', 
       to: to,
       subject: subject,
       text: body,
@@ -34,7 +34,7 @@ exports.sendEmail = functions.https.onRequest((req, res) => {
           <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" style="background-color: #ffffff; border: 1px solid #ddd; padding: 20px; font-family: Arial, sans-serif;">
             <tr>
               <td style="text-align: center; padding: 10px;">
-                <img src="https://firebasestorage.googleapis.com/v0/b/sicop-is.appspot.com/o/logo%2Flogo_sgi.png?alt=media&token=8b9f0aaa-37f3-48c7-a88c-13fb95e24783" alt="Logo" style="width: 600px;">
+                <img src="https://firebasestorage.googleapis.com/v0/b/sicop-is.appspot.com/o/logo%2Flogo_sgi.png?alt=media&token=8b9f0aaa-37f3-48c7-a88c-13fb95e24783" alt="Logo" style="width: 400px;">
               </td>
             </tr>
             <tr>
@@ -61,10 +61,10 @@ exports.sendEmail = functions.https.onRequest((req, res) => {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error('Error al enviar el correo:', error);
-        // return res.status(500).send('Error al enviar el correo: ' + error.toString());
+        return res.status(500).send('Error al enviar el correo: ' + error.toString());
       }
       console.log('Correo enviado:', info.response);
-      // return res.status(200).send('Email sent: ' + info.response);
+      return res.status(200).send('Correo Enviado: ' + info.response);
     });
   });
 });

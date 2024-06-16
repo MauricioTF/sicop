@@ -1,12 +1,14 @@
 // Importación de módulos y servicios necesarios
 import { Component, OnInit, inject } from '@angular/core';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Incidencia } from 'src/app/models/incidencia.model';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import firebase from 'firebase/compat';
 import { UtilsService } from 'src/app/services/utils.service';
-
+import { Observable, catchError, from, map, switchMap } from 'rxjs';
 // Decorador Component que define la configuración del componente
 @Component({
   selector: 'app-actualizar-incidencia',
@@ -18,6 +20,9 @@ export class ActualizarIncidenciaComponent implements OnInit {
     // Inyección de servicios y definición de variables
   firebaseService = inject(FirebaseService);
   utilService = inject(UtilsService);
+  firestore = inject(AngularFirestore);
+
+  counterDoc = this.firestore.collection('counters').doc('idCounter');
 
   // Usuario
   t_usuarios = {} as User;
@@ -25,8 +30,15 @@ export class ActualizarIncidenciaComponent implements OnInit {
   t_incidencia = {} as Incidencia;
   userId: string | null = null;
 
+  
+  specificRole: any;
+  usuarios: any;
+  asignacion: any;
+  year: string;
+
     // Definición del formulario
   form = new FormGroup({
+    uid: new FormControl(null),
     cn_id_incidencia: new FormControl(1),
     cn_id_usuario: new FormControl(null),
     cn_id_estado: new FormControl(null),
@@ -66,87 +78,67 @@ export class ActualizarIncidenciaComponent implements OnInit {
 
     //otorga hora de CR
     this.form.controls.cf_fecha_hora.setValue(new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }));
-    this.crearIncidencia();
-  }
+    this.form.controls.uid.setValue("2024-00001");
 
-  sendEmail(){
-    this.firebaseService.sendEmail("torresfernandezmauricio18@gmail.com", "Incidencia", "Se ha reportado una incidencia")
-    .subscribe(
-      response => {
-        // console.log("Respuesta del servidor:", response);
-        // Maneja la respuesta según sea necesario, aquí solo estamos imprimiendo en consola
-        // Puedes realizar alguna acción según la respuesta, aunque en este caso es un texto de éxito
-      },
-      error => {
-        // console.error("Error al enviar el email:", error);
-        // Maneja el error apropiadamente
-      }
-    );
-  
+    this.crearIncidencia();
   }
   
   // Método para crear la incidencia
-  async crearIncidencia() {
+ async crearIncidencia() {
+  if (!this.userId) {
+    console.error('El UID del usuario no está definido');
+    this.utilService.presentToast({
+      message: 'Error: El UID del usuario no está definido',
+      duration: 2500,
+      color: 'danger',
+      position: 'bottom',
+      icon: 'alert-circle-outline',
+    });
+    return;
+  }
 
-    if (!this.userId) {
-      console.error('El UID del usuario no está definido');
-      this.utilService.presentToast({
-        message: 'Error: El UID del usuario no está definido',
-        duration: 2500,
-        color: 'danger',
-        position: 'bottom',
-        icon: 'alert-circle-outline',
-      });
-      return;
-    }
+  // let path = `t_incidencias/${this.userId}/t_incidencias`;
+  let path = `t_incidencias/${this.userId}/t_incidencias`;
+  console.log('Path de la incidencia:', path);
 
-    let path = `t_incidencias/${this.userId}/t_incidencias`;
-    
-    console.log('Path de la incidencia:', path);
+  const loading = await this.utilService.loading();
+  await loading.present();
 
-    const loading = await this.utilService.loading();
-    await loading.present();
-
-    let dataUrl = this.form.value.ct_id_img;//valor de la imagen seleccionada
-    let imgPath = `${this.userId}/${Date.now()}`//path unico para la imagen
+  try {
+ 
+    const customId = await this.idIncidencia();
+    // Actualizar la URL de la imagen
+    let dataUrl = this.form.value.ct_id_img; // Valor de la imagen seleccionada
+    let imgPath = `${this.userId}/${Date.now()}`; // Path único para la imagen
     let imgUrl = await this.firebaseService.updateImg(imgPath, dataUrl);
 
     this.form.controls.ct_id_img.setValue(imgUrl);
-    //delete this.form.value.cn_id_incidencia; // Elimina el id y toma el uid creado
     
+    await this.firestore.doc(`${path}/${customId}`).set(this.form.value);
 
-    console.log('Datos del formulario antes de agregar:', this.form.value);
+    this.utilService.dismissModal({ success: true }); // Para cerrar el modal automáticamente
 
-
-    this.firebaseService
-      .addDocument(path, this.form.value)
-      .then(async (resp) => {
-        this.utilService.dismissModal({ success: true });//para cerrar el modal automaticamente
-        this.sendEmail();
-        //mensaje de exito al guardar los datos
-        this.utilService.presentToast({
-          message: 'Incidencia agregada de manera exitosa',
-          duration: 1500,
-          color: 'primary',
-          position: 'bottom',
-          icon: 'checkmark-circle-outline',
-        });
-      })
-      //mensaje de error al guardar los datos
-      .catch((error) => {
-        console.error('Error al agregar la incidencia:', error);
-        this.utilService.presentToast({
-          message: error.message,
-          duration: 2500,
-          color: 'danger',
-          position: 'bottom',
-          icon: 'alert-circle-outline',
-        });
-      })
-      .finally(() => {
-        loading.dismiss();
-      });
+    // Mensaje de éxito al guardar los datos
+    this.utilService.presentToast({
+      message: 'Incidencia agregada de manera exitosa',
+      duration: 1500,
+      color: 'primary',
+      position: 'bottom',
+      icon: 'checkmark-circle-outline',
+    });
+  } catch (error) {
+    console.error('Error al agregar la incidencia:', error);
+    this.utilService.presentToast({
+      message: 'Error al agregar la incidencia',
+      duration: 2500,
+      color: 'danger',
+      position: 'bottom',
+      icon: 'alert-circle-outline',
+    });
+  } finally {
+    loading.dismiss();
   }
+}
 
   // Método para obtener las fotos
   async takeImage() {
@@ -156,4 +148,93 @@ export class ActualizarIncidenciaComponent implements OnInit {
     this.form.controls.ct_id_img.setValue(dataUrl);
   }
 
+    // Método para obtener los técnicos
+    getTecnicos(): Promise<any> {
+      return new Promise((resolve, reject) => {
+        this.firebaseService.getTecnicos().subscribe(
+          data => {
+            const tecnicos = data;
+           resolve(tecnicos);
+            console.log("Todos los usuarios ",tecnicos);
+          },
+          error => {
+            console.error('Error al obtener roles:', error);
+            reject(error); // Rechaza la promesa en caso de error
+          }
+        );
+      });
+    }
+    
+      // Método para obtener los roles de los usuarios
+    async sendEmail(){
+    
+      this.usuarios = await this.getTecnicos();//obtiene los roles registrados
+    
+      let u_tecnios = [];
+      
+    
+      // recorro los tecnicos para acceder a sus id
+      for (let i = 0; i < this.usuarios.length; i++) {
+    
+        // asignamos a specific rol el rol con cada usuario
+        this.specificRole = await this.firebaseService.getSpecificRole(this.usuarios[i].cn_id_usuario); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
+    
+      // recorremos a los roles de cada usuario
+      for (let j = 0; j < this.specificRole.length; j++) {
+    
+        // consultamos si el usuario tiene rol de tecnico
+        if(this.specificRole[j].cn_id_rol === 3){
+          
+          console.log("Usuario con rol de tecnico ",this.usuarios[i].ct_correo);
+          this.firebaseService.sendEmail(this.usuarios[i].ct_correo, "Nueva incidencia reportada", "Hola!! "+this.usuarios[i].ct_nombre+" se ha reportado una nueva incidencia, por favor revisarla y asignarla a un tecnico si aún no lo has hecho.")
+    .subscribe(
+      response => {
+
+      },
+      error => {
+
+      }
+    );
+          // agregamos al arreglo el id del usuario con rol de tenico
+          u_tecnios.push(this.usuarios[i]);
+        }
+    
+      }
+    
+    }
+        
+       return u_tecnios;
+    }
+
+
+    // ////////////////////////////////////// generar el uid
+  // Método para obtener el siguiente ID personalizado
+  private async idIncidencia(): Promise<string> {
+    
+    this.year = new Date().getFullYear().toString();
+
+    const counterDoc = this.firestore.doc(`counters/${this.year}`);
+    const counterSnapshot = await counterDoc.get().toPromise();
+
+    let newCounter = 1; // Valor inicial si no existe el contador
+
+    if (counterSnapshot.exists) {
+      const counterData = counterSnapshot.data() as { count: number };
+      newCounter = counterData.count + 1;
+    }
+
+    const paddedCounter = String(newCounter).padStart(5, '0'); // Relleno con ceros
+    const customId = `${this.year}-${paddedCounter}`;
+
+    // Actualiza el contador en Firestore
+    await counterDoc.set({ count: newCounter }, { merge: true });
+
+    return customId;
+  }
+  // ////////////////////////////////////////////////////////////
 }
+
+function subscribe(arg0: (response: any) => void, arg1: (error: any) => void) {
+  throw new Error('Function not implemented.');
+}
+
