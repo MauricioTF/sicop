@@ -21,6 +21,12 @@
               <strong>Lugar:</strong>{{incidencia.ct_lugar}}
               <strong>Descripcion:</strong>{{incidencia.ct_descripcion}}
               <strong>Fecha y hora:</strong>{{incidencia.cf_fecha_hora}}
+              <strong *ngIf="incidencia.cn_id_estado == 1">Estado: Registrada</strong>
+              <strong *ngIf="incidencia.cn_id_estado == 2">Estado: Asignada</strong>
+              <strong *ngIf="incidencia.cn_id_estado == 3">Estado: En revisión</strong>
+              <strong *ngIf="incidencia.cn_id_estado == 4">Estado: Terminada</strong>
+              <strong *ngIf="incidencia.cn_id_estado == 5">Estado: Finalizada</strong>
+
             </div>
           </ion-label>
       </ion-item>

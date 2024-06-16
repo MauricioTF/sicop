@@ -77,6 +77,7 @@ export class ActualizarIncidenciaComponent implements OnInit {
 
     //otorga hora de CR
     this.form.controls.cf_fecha_hora.setValue(new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }));
+    this.form.controls.cn_id_estado.setValue(1);
 
     this.crearIncidencia();
   }

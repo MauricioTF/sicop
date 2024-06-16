@@ -37,6 +37,8 @@ export class AsignarIncidenciaComponent  implements OnInit {
   selectedTecnicoId: string | null = null;
   u_asignaciones = [];
 
+  idUsuarios: any;
+
     // Definición del formulario
   form = new FormGroup({
     cn_id_asignacion_incidencia: new FormControl(1),
@@ -50,13 +52,14 @@ export class AsignarIncidenciaComponent  implements OnInit {
     this.form.controls.cn_id_incidencia.setValue(this.incidencia['id']);
     this.tecnicos = await this.rolesXusuario();
 
+    //para quitar los tecnicos que ya fuerion asignados a la incidencia
     for (let i = 0; i < this.u_asignaciones.length; i++) {
       for (let j = 0; j < this.tecnicos.length; j++) {
         if(this.u_asignaciones[i].cn_id_incidencia === this.incidencia['id'] && this.tecnicos[j].cn_id_usuario === this.u_asignaciones[i].cn_id_usuario){
-          console.log("asigna ", this.u_asignaciones[i].cn_id_usuario);
+
           this.tecnicos.splice(j, 1);
-          console.log("tec ", this.tecnicos);
-      }
+
+        }
       
     }
   }
@@ -84,8 +87,6 @@ export class AsignarIncidenciaComponent  implements OnInit {
 
     let path = `t_asignacion_incidencia/${this.user().cn_id_usuario}/t_asignacion_incidencia`;
     
-    console.log('Path de la incidencia asignacion:', path);
-
     const loading = await this.utilService.loading();
     await loading.present();
 
@@ -93,6 +94,9 @@ export class AsignarIncidenciaComponent  implements OnInit {
       .addDocument(path, this.form.value)
       .then(async (resp) => {
         this.utilService.dismissModal({ success: true });//para cerrar el modal automaticamente
+
+        // Cambia el estado de la incidencia al asignarla
+        this.firebaseService.updateIncidenciaEstado(this.incidencia['id'], 2, String(this.incidencia['cn_id_usuario'])); // Cambia el estado de la incidencia al asignarla
 
         //mensaje de exito al guardar los datos
         this.utilService.presentToast({
@@ -107,7 +111,7 @@ export class AsignarIncidenciaComponent  implements OnInit {
       .catch((error) => {
         console.error('Error al asignar incidencia:', error);
         this.utilService.presentToast({
-          message: error.message,
+          message: 'Error al asignar incidencia, intente nuevamente.',
           duration: 2500,
           color: 'danger',
           position: 'bottom',
@@ -126,7 +130,6 @@ export class AsignarIncidenciaComponent  implements OnInit {
       data => {
         const tecnicos = data;
        resolve(tecnicos);
-        console.log("Todos los usuarios ",tecnicos);
       },
       error => {
         console.error('Error al obtener roles:', error);
@@ -150,7 +153,7 @@ async rolesXusuario(){
     this.asignacion = await this.getAsignaciones(this.usuarios[i].cn_id_usuario);//obtiene las asignaciones registradas
    
     for (let j = 0; j < this.asignacion.length; j++) {
-      // console.log("Asignaciones ",this.asignacion);  
+
       this.u_asignaciones.push(this.asignacion[j]);
     }
 
@@ -170,8 +173,6 @@ async rolesXusuario(){
 
 }
 
-  console.log("Usuarios con rol de tecnico ",u_tecnios);
-
    return u_tecnios;
 }
 
@@ -181,7 +182,7 @@ getAsignaciones(uid): Promise<any> {
       data => {
         const asignacion = data;
        resolve(asignacion);
-        // console.log("Todos las asig ",asignacion);
+
       },
       error => {
         console.error('Error al obtener roles:', error);

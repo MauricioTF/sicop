@@ -94,6 +94,13 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
         .then(async (resp) => {
           this.utilService.dismissModal({ success: true });//para cerrar el modal automaticamente
   
+              // Cambia el estado de la incidencia al hacer el diagnostico
+          this.firebaseService.updateIncidenciaEstado(
+            this.incidencia['id'],
+            4,
+            String(this.incidencia['cn_id_usuario'])
+          );
+
           //mensaje de exito al guardar los datos
           this.utilService.presentToast({
             message: 'Diagnostico agregado de manera exitosa',
@@ -127,5 +134,12 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
     this.form.controls.cn_id_img.setValue(dataUrl);
   }
 
-  
+  cambiaEstado_revision() {
+    // Cambia el estado de la incidencia al asignarla
+    this.firebaseService.updateIncidenciaEstado(
+      this.incidencia['id'],
+      3,
+      String(this.incidencia['cn_id_usuario'])
+    ); // Cambia el estado de la incidencia al asignarla
+  }
 }

@@ -1,0 +1,35 @@
+/* Estilo para el botón con fondo anaranjado */
+ion-item-option.custom-orange {
+    --background: #FFAA00; /* Color anaranjado */
+    color: white; /* Color del texto */
+  }
+
+ion-item-option.custom-green {
+    --background: #1BA72C; /* Color anaranjado */
+    color: white; /* Color del texto */
+}
+  
+  ion-icon.p-icon::before {
+    content: 'P'; /* Contenido del icono */
+    font-family: Arial, sans-serif; /* Familia tipográfica */
+    font-size: 24px; /* Tamaño de la fuente */
+    font-weight: bold; /* Grosor de la fuente */
+    color: white; /* Color del texto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  ion-icon.d-icon::before {
+    content: 'D'; /* Contenido del icono */
+    font-family: Arial, sans-serif; /* Familia tipográfica */
+    font-size: 24px; /* Tamaño de la fuente */
+    font-weight: bold; /* Grosor de la fuente */
+    color: white; /* Color del texto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  
+  

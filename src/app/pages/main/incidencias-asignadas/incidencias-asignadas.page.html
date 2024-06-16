@@ -24,15 +24,32 @@
             <strong>Lugar:</strong>{{incidencia.ct_lugar}}
             <strong>Descripcion:</strong>{{incidencia.ct_descripcion}}
             <strong>Fecha y hora:</strong>{{incidencia.cf_fecha_hora}}
+            <strong *ngIf="incidencia.cn_id_estado == 2">Estado: Pendiente</strong>
+            <strong *ngIf="incidencia.cn_id_estado == 3">Estado: En revisión</strong>
+
           </div>
         </ion-label>
       </ion-item>
 
       <ion-item-options>
         <!-- boton para asignar incidencia -->
-        <ion-item-option (click)="addDiagnostico(null, incidencia)" color="tertiary">
-            <ion-icon class="option-btn" name="add-outline"></ion-icon>
-          </ion-item-option>
+        <ion-item-option 
+        *ngIf="!showBtn && incidencia.cn_id_estado != 3" 
+        (click)="setEstadoEnRevision(incidencia)" 
+        class="custom-orange"
+      >
+        <ion-icon class="option-btn p-icon"></ion-icon>
+      </ion-item-option>
+      
+        
+        <ion-item-option
+          *ngIf="incidencia.cn_id_estado != 2"
+          (click)="addDiagnostico(null, incidencia)"
+          class="custom-green"
+        >
+          <ion-icon class="option-btn d-icon"></ion-icon>
+        </ion-item-option>
+
 
       </ion-item-options>
     </ion-item-sliding>

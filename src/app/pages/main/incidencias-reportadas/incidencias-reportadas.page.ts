@@ -47,7 +47,7 @@ export class IncidenciasReportadasPage implements OnInit {
       );
     });
   }
-  
+
   // Método para refrescar la pantalla
   doRefresh(event : any){
 
@@ -87,12 +87,21 @@ async getIncidencias() {
           )
           .subscribe({
             next: (resp: any) => {
+              
               allIncidencias = [...allIncidencias, ...resp]; // Agregar incidencias a la lista acumulada
               processedUsers++;
 
               // Verificar si todos los usuarios han sido procesados
               if (processedUsers === this.idUsuarios.length) {
-                this.incidencia = allIncidencias;
+                
+                for (let i = 0; i < allIncidencias.length; i++) {   
+                  //si la incidencia no está terminada               
+                  if (allIncidencias[i].cn_id_estado != 5) {  
+                    this.incidencia.push(allIncidencias[i]);
+                    
+                  }
+                }
+
                 this.loading = false;
               }
             },
@@ -125,17 +134,18 @@ async getIncidencias() {
   // Método para asignar una incidencia
   async asignarIncidencia(asignaciones?: Asignaciones, incidencia?: Incidencia){
 
-    console.log(incidencia);
-
     let modal = await this.utilService.getModal({
       component: AsignarIncidenciaComponent,
       cssClass: 'add-update-modal',
       componentProps: {asignaciones, incidencia}
     })
+
+    // para que cargue automaticamente los incidentes agregados
+    if (modal) this.getIncidencias();
   }
   // Al asignar tecnico debe agregar prioridad, riesgo, afectación y categoría
   
 
-  // El encargado hacer cierre de incidencias ///////////////////////////
+  // El supervisor hacer cierre de incidencias ///////////////////////////
 
 }

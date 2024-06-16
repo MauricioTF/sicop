@@ -1,0 +1,16 @@
+
+ion-item-option.custom-green {
+    --background: #1BA72C; /* Color anaranjado */
+    color: white; /* Color del texto */
+}
+  
+  ion-icon.a-icon::before {
+    content: 'A'; /* Contenido del icono */
+    font-family: Arial, sans-serif; /* Familia tipográfica */
+    font-size: 24px; /* Tamaño de la fuente */
+    font-weight: bold; /* Grosor de la fuente */
+    color: white; /* Color del texto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

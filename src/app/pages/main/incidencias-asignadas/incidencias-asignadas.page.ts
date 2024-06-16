@@ -22,8 +22,10 @@ export class IncidenciasAsignadasPage implements OnInit {
   idUsuarios: any;
 
   sepcificAsignation: any;
+  showBtn: boolean = false;
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   // Método que se ejecuta cuando la vista está a punto de entrar y volverse la vista activa
   ionViewWillEnter() {
@@ -63,7 +65,7 @@ export class IncidenciasAsignadasPage implements OnInit {
 
     this.firebaseService.getCurrentUser().subscribe((user) => {
       if (user) {
-        let allIncidencias = []; // Lista para acumular todas las incidencias
+        let allAsignacion = []; // Lista para acumular todas las incidencias
         let allA = []; // Lista para acumular todas las incidencias
 
         let processedUsers = 0; // Contador para usuarios procesados
@@ -72,9 +74,6 @@ export class IncidenciasAsignadasPage implements OnInit {
         for (let i = 0; i < this.idUsuarios.length; i++) {
           const userPath = `t_usuarios/${this.idUsuarios[i].cn_id_usuario}`; // Ruta del usuario
           const path = `t_asignacion_incidencia/${this.idUsuarios[i].cn_id_usuario}/t_asignacion_incidencia`; // Ruta de la incidencia
-
-          const userPathIncidencia = `t_usuarios/${this.idUsuarios[i].cn_id_usuario}`; // Ruta del usuario
-          const pathIncidencia = `t_incidencias/${this.idUsuarios[i].cn_id_usuario}/t_incidencias`; // Ruta de la incidencia
 
           this.loading = true;
 
@@ -95,11 +94,15 @@ export class IncidenciasAsignadasPage implements OnInit {
                 processedUsers++;
                 // Verificar si todos los usuarios han sido procesados
                 if (processedUsers === this.idUsuarios.length) {
-                  this.asignaciones = allA.filter(
+                  allAsignacion =  allA.filter(
                     (incidencia) => incidencia.cn_id_usuario === user.uid
                   );
-                  console.log('Asignaciones:', this.asignaciones);
+
+                  this.asignaciones =  allAsignacion;
+            
+                  // console.log('Asignaciones asign:', this.asignaciones);
                   this.getIncidencias();
+                  
                   this.loading = false;
                   // this.useAsignaciones(); // Llama a useAsignaciones cuando los datos estén listos
                 }
@@ -164,9 +167,11 @@ export class IncidenciasAsignadasPage implements OnInit {
                     for (let j = 0; j < allIncidencias.length; j++) {
                       if (
                         this.asignaciones[i].cn_id_incidencia ==
-                        allIncidencias[j].id
+                        allIncidencias[j].id && allIncidencias[j].cn_id_estado < 4
                       ) {
+
                         this.incidencia.push(allIncidencias[j]);
+
                       }
                     }
                   }
@@ -200,12 +205,22 @@ export class IncidenciasAsignadasPage implements OnInit {
 
   // Método para agregar un diagnóstico
   async addDiagnostico(diagnostico?: Diagnostico, incidencia?: Incidencia) {
-    console.log(incidencia);
 
     let modal = await this.utilService.getModal({
       component: DiagnosticoIncidenciaComponent,
       cssClass: 'add-update-modal',
       componentProps: { diagnostico, incidencia },
     });
+
+    if (modal) this.getIncidencias();
+  }
+
+  // Método para cambiar el estado de la incidencia a "En Revisión"
+  async setEstadoEnRevision(incidencia: Incidencia) {
+    
+      await this.firebaseService.updateIncidenciaEstado(incidencia['id'], 3, String(incidencia['cn_id_usuario'])); // Estado "En Revisión"
+      incidencia.cn_id_estado = 3; // Actualizar localmente el estado
+
+      return this.showBtn = true;
   }
 }
