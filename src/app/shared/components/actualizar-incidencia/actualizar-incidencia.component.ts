@@ -38,7 +38,6 @@ export class ActualizarIncidenciaComponent implements OnInit {
 
     // Definición del formulario
   form = new FormGroup({
-    uid: new FormControl(null),
     cn_id_incidencia: new FormControl(1),
     cn_id_usuario: new FormControl(null),
     cn_id_estado: new FormControl(null),
@@ -78,7 +77,6 @@ export class ActualizarIncidenciaComponent implements OnInit {
 
     //otorga hora de CR
     this.form.controls.cf_fecha_hora.setValue(new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }));
-    this.form.controls.uid.setValue("2024-00001");
 
     this.crearIncidencia();
   }
@@ -99,7 +97,6 @@ export class ActualizarIncidenciaComponent implements OnInit {
 
   // let path = `t_incidencias/${this.userId}/t_incidencias`;
   let path = `t_incidencias/${this.userId}/t_incidencias`;
-  console.log('Path de la incidencia:', path);
 
   const loading = await this.utilService.loading();
   await loading.present();
