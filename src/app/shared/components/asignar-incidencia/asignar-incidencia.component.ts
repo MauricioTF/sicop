@@ -44,6 +44,12 @@ export class AsignarIncidenciaComponent  implements OnInit {
     cn_id_asignacion_incidencia: new FormControl(1),
     cn_id_usuario: new FormControl(null, [Validators.required]),
     cn_id_incidencia: new FormControl(null),
+
+    // Tabla de incidencias
+    cn_id_afectacion: new FormControl('', []),
+    cn_id_categoria: new FormControl('', []),
+    cn_id_prioridad: new FormControl('', []),
+    cn_id_riesgo: new FormControl('', []),
   });
 
     // Método que se ejecuta al inicializar el componente
@@ -70,8 +76,18 @@ export class AsignarIncidenciaComponent  implements OnInit {
 
         // Asignar el valor seleccionado del ion-select al formControl
         const selectedTecnicoId = this.form.get('cn_id_usuario')?.value;
+
         this.form.controls['cn_id_usuario'].setValue(selectedTecnicoId);
 
+
+        await this.firebaseService.actualizaTabla(this.incidencia['id'], String(this.incidencia['cn_id_usuario']), {
+          cn_id_afectacion: this.form.value.cn_id_afectacion,
+          cn_id_categoria: this.form.value.cn_id_categoria,
+          cn_id_prioridad: this.form.value.cn_id_prioridad,
+          cn_id_riesgo: this.form.value.cn_id_riesgo,
+
+        });
+        
     //otorga hora de CR
     // this.form.controls.cf_fecha_hora.setValue(new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }));
     this.asignarIncidencia();
@@ -96,7 +112,7 @@ export class AsignarIncidenciaComponent  implements OnInit {
         this.utilService.dismissModal({ success: true });//para cerrar el modal automaticamente
 
         // Cambia el estado de la incidencia al asignarla
-        this.firebaseService.updateIncidenciaEstado(this.incidencia['id'], 2, String(this.incidencia['cn_id_usuario'])); // Cambia el estado de la incidencia al asignarla
+        this.firebaseService.actualizaTabla(this.incidencia['id'], String(this.incidencia['cn_id_usuario']), { cn_id_estado: 2 });
 
         //mensaje de exito al guardar los datos
         this.utilService.presentToast({
@@ -190,6 +206,10 @@ getAsignaciones(uid): Promise<any> {
       }
     );
   });
+}
+
+datoVacio(field: any | null | undefined): boolean {
+  return field === null || field === undefined || field.trim() === '';
 }
 
 }

@@ -7,8 +7,50 @@
       <ion-label>Técnicos</ion-label>
       <ion-select formControlName="cn_id_usuario" placeholder="Selecciona un técnico">
         <ion-select-option *ngFor="let tecnico of tecnicos" [value]="tecnico.cn_id_usuario">
-          {{ tecnico.ct_nombre }} <!-- Ajusta para mostrar el nombre del técnico -->
+          {{ tecnico.ct_nombre }}
         </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- afectacion -->
+    <ion-item *ngIf="datoVacio(incidencia['cn_id_afectacion'])">
+      <ion-label>Afectación</ion-label>
+      <ion-select formControlName="cn_id_afectacion" placeholder="Selecciona el tipo de afectación">
+        <ion-select-option value="bajo">Bajo</ion-select-option>
+        <ion-select-option value="medio">Medio</ion-select-option>
+        <ion-select-option value="alto">Alto</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Categoria -->
+    <ion-item *ngIf="datoVacio(incidencia['cn_id_categoria'])">
+      <ion-label>Categoría</ion-label>
+      <ion-select formControlName="cn_id_categoria" placeholder="Selecciona el tipo de categoría">
+        <ion-select-option value="Reparacion">Reparación</ion-select-option>
+        <ion-select-option value="causa_natural">Intervención por causa natural</ion-select-option>
+        <ion-select-option value="atencion_mobiliario">Atención al mobiliario</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Prioridad -->
+    <ion-item *ngIf="datoVacio(incidencia['cn_id_prioridad'])">
+      <ion-label>Prioridad</ion-label>
+      <ion-select formControlName="cn_id_prioridad" placeholder="Selecciona la prioridad">
+        <ion-select-option value="bajo">Bajo</ion-select-option>
+        <ion-select-option value="medio">Medio</ion-select-option>
+        <ion-select-option value="alto">Alto </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+     <!-- Riesgo -->
+     <ion-item *ngIf="datoVacio(incidencia['cn_id_riesgo'])">
+      <ion-label>riesgo</ion-label>
+      <ion-select formControlName="cn_id_riesgo" placeholder="Selecciona el riesgo">
+        <ion-select-option value="muy_bajo">Muy bajo</ion-select-option>
+        <ion-select-option value="bajo">Bajo</ion-select-option>
+        <ion-select-option value="medio">Medio</ion-select-option>
+        <ion-select-option value="alto">Alto </ion-select-option>
+        <ion-select-option value="muy_alto">Muy alto </ion-select-option>
       </ion-select>
     </ion-item>
 

@@ -218,7 +218,9 @@ export class IncidenciasAsignadasPage implements OnInit {
   // Método para cambiar el estado de la incidencia a "En Revisión"
   async setEstadoEnRevision(incidencia: Incidencia) {
     
-      await this.firebaseService.updateIncidenciaEstado(incidencia['id'], 3, String(incidencia['cn_id_usuario'])); // Estado "En Revisión"
+     // Cambia el estado de la incidencia al asignarla
+     await this.firebaseService.actualizaTabla(incidencia['id'], String(incidencia['cn_id_usuario']), { cn_id_estado: 3 });
+ 
       incidencia.cn_id_estado = 3; // Actualizar localmente el estado
 
       return this.showBtn = true;

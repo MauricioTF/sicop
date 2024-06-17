@@ -213,11 +213,11 @@ export class FirebaseService {
   }
 
     // Método para actualizar el estado de una incidencia
-    updateIncidenciaEstado(id: string, estado: number, idUsuario: string): Promise<void> {
+    actualizaTabla(id: string, idUsuario: string, fieldsToUpdate: { [key: string]: any }): Promise<void> {
       return this.firestore
-        .collection('/t_incidencias/'+idUsuario+'/t_incidencias')
+        .collection(`/t_incidencias/${idUsuario}/t_incidencias`)
         .doc(id)
-        .update({ cn_id_estado: estado });
+        .update(fieldsToUpdate);
     }
-
+    
 }
