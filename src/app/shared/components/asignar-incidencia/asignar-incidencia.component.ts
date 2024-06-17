@@ -71,27 +71,30 @@ export class AsignarIncidenciaComponent  implements OnInit {
   }
 }
 
-    // Método que se ejecuta al enviar el formulario
-  async submit() {
-
-        // Asignar el valor seleccionado del ion-select al formControl
-        const selectedTecnicoId = this.form.get('cn_id_usuario')?.value;
-
-        this.form.controls['cn_id_usuario'].setValue(selectedTecnicoId);
+  // Método que se ejecuta al enviar el formulario
+async submit() {
+  const selectedTecnicoId = this.form.get('cn_id_usuario')?.value;
+  this.form.controls['cn_id_usuario'].setValue(selectedTecnicoId);
 
 
-        await this.firebaseService.actualizaTabla(this.incidencia['id'], String(this.incidencia['cn_id_usuario']), {
-          cn_id_afectacion: this.form.value.cn_id_afectacion,
-          cn_id_categoria: this.form.value.cn_id_categoria,
-          cn_id_prioridad: this.form.value.cn_id_prioridad,
-          cn_id_riesgo: this.form.value.cn_id_riesgo,
+  if(String(this.incidencia['cn_id_prioridad']) === "" && String(this.incidencia['cn_id_afectacion']) === "" &&
+  String(this.incidencia['cn_id_categoria']) === "" && String(this.incidencia['cn_id_riesgo']) === ""){
 
-        });
-        
-    //otorga hora de CR
-    // this.form.controls.cf_fecha_hora.setValue(new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }));
-    this.asignarIncidencia();
+    // Datos para la tabla t_incidencias
+const incidenciaData = {
+  cn_id_afectacion: this.form.value.cn_id_afectacion,
+  cn_id_categoria: this.form.value.cn_id_categoria,
+  cn_id_prioridad: this.form.value.cn_id_prioridad,
+  cn_id_riesgo: this.form.value.cn_id_riesgo,
+};
+
+  // Actualiza la tabla t_incidencias
+  await this.firebaseService.actualizaTabla(this.incidencia['id'], String(this.incidencia['cn_id_usuario']), incidenciaData);
   }
+
+  // Asigna la incidencia sin los campos adicionales
+  this.asignarIncidencia();
+}
 
   // Método para obtener el usuario actual
   user(): User {
@@ -100,30 +103,36 @@ export class AsignarIncidenciaComponent  implements OnInit {
 
   // Método para asignar la incidencia
   async asignarIncidencia() {
-
     let path = `t_asignacion_incidencia/${this.user().cn_id_usuario}/t_asignacion_incidencia`;
-    
+  
     const loading = await this.utilService.loading();
     await loading.present();
-
+  
+    // Crea un objeto con solo los campos necesarios para t_asignacion_incidencia
+    const asignacionData = {
+      cn_id_asignacion_incidencia: this.form.value.cn_id_asignacion_incidencia,
+      cn_id_usuario: this.form.value.cn_id_usuario,
+      cn_id_incidencia: this.form.value.cn_id_incidencia,
+    };
+  
     this.firebaseService
-      .addDocument(path, this.form.value)
+      .addDocument(path, asignacionData)
       .then(async (resp) => {
-        this.utilService.dismissModal({ success: true });//para cerrar el modal automaticamente
-
+        this.utilService.dismissModal({ success: true }); // Para cerrar el modal automáticamente
+  
         // Cambia el estado de la incidencia al asignarla
         this.firebaseService.actualizaTabla(this.incidencia['id'], String(this.incidencia['cn_id_usuario']), { cn_id_estado: 2 });
-
-        //mensaje de exito al guardar los datos
+  
+        // Mensaje de éxito al guardar los datos
         this.utilService.presentToast({
-          message: 'Asignacion de incidencia agregada de manera exitosa',
+          message: 'Asignación de incidencia agregada de manera exitosa',
           duration: 1500,
           color: 'primary',
           position: 'bottom',
           icon: 'checkmark-circle-outline',
         });
       })
-      //mensaje de error al guardar los datos
+      // Mensaje de error al guardar los datos
       .catch((error) => {
         console.error('Error al asignar incidencia:', error);
         this.utilService.presentToast({
@@ -138,6 +147,7 @@ export class AsignarIncidenciaComponent  implements OnInit {
         loading.dismiss();
       });
   }
+  
 
   // Método para obtener los técnicos
   getTecnicos(): Promise<any> {

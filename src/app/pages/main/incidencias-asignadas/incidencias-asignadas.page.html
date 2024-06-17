@@ -26,6 +26,9 @@
             <strong>Fecha y hora:</strong>{{incidencia.cf_fecha_hora}}
             <strong *ngIf="incidencia.cn_id_estado == 2">Estado: Pendiente</strong>
             <strong *ngIf="incidencia.cn_id_estado == 3">Estado: En revisión</strong>
+            <strong *ngIf="incidencia.cn_id_prioridad == 1">Prioridad: Baja</strong>
+            <strong *ngIf="incidencia.cn_id_prioridad == 2">Prioridad: Medio</strong>
+            <strong *ngIf="incidencia.cn_id_prioridad == 3">Prioridad: alto</strong>
 
           </div>
         </ion-label>

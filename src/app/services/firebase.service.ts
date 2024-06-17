@@ -124,6 +124,14 @@ export class FirebaseService {
     return this.dataRef;
   }
 
+    // Método para obtener los datos de una colección de Firestore
+    getCollectionDataIncidenciaByPriority(path: any): AngularFirestoreCollection<Incidencia> {
+      this.dataRef = this.firestore.collection(path, (ref) =>
+        ref.orderBy('cn_id_prioridad', 'desc')
+      );
+      return this.dataRef;
+    }
+
   // Método para obtener los datos de una colección de Firestore
   getCollectionDataDiagnosticos(
     path: any

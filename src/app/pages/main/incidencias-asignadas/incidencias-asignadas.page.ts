@@ -146,7 +146,7 @@ export class IncidenciasAsignadasPage implements OnInit {
           this.loading = true;
 
           this.firebaseService
-            .getCollectionDataIncidencia(path)
+            .getCollectionDataIncidenciaByPriority(path)
             .snapshotChanges()
             .pipe(
               map((changes) =>

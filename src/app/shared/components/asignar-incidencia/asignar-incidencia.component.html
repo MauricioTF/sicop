@@ -3,7 +3,7 @@
 <ion-content class="content">
   <form [formGroup]="form" (ngSubmit)="submit()" class="ion-padding ion-text-center auth-form">
     <!-- Seleccionar técnico -->
-    <ion-item>
+    <ion-item *ngIf="tecnicos.length != 0">
       <ion-label>Técnicos</ion-label>
       <ion-select formControlName="cn_id_usuario" placeholder="Selecciona un técnico">
         <ion-select-option *ngFor="let tecnico of tecnicos" [value]="tecnico.cn_id_usuario">
@@ -11,14 +11,14 @@
         </ion-select-option>
       </ion-select>
     </ion-item>
-
+    <div *ngIf="tecnicos.length === 0"> Esta incidencia fue asignada a todos los tecnicos disponibles</div>
     <!-- afectacion -->
     <ion-item *ngIf="datoVacio(incidencia['cn_id_afectacion'])">
       <ion-label>Afectación</ion-label>
       <ion-select formControlName="cn_id_afectacion" placeholder="Selecciona el tipo de afectación">
-        <ion-select-option value="bajo">Bajo</ion-select-option>
-        <ion-select-option value="medio">Medio</ion-select-option>
-        <ion-select-option value="alto">Alto</ion-select-option>
+        <ion-select-option value="0">Bajo</ion-select-option>
+        <ion-select-option value="1">Medio</ion-select-option>
+        <ion-select-option value="2">Alto</ion-select-option>
       </ion-select>
     </ion-item>
 
@@ -26,7 +26,7 @@
     <ion-item *ngIf="datoVacio(incidencia['cn_id_categoria'])">
       <ion-label>Categoría</ion-label>
       <ion-select formControlName="cn_id_categoria" placeholder="Selecciona el tipo de categoría">
-        <ion-select-option value="Reparacion">Reparación</ion-select-option>
+        <ion-select-option value="reparacion">Reparación</ion-select-option>
         <ion-select-option value="causa_natural">Intervención por causa natural</ion-select-option>
         <ion-select-option value="atencion_mobiliario">Atención al mobiliario</ion-select-option>
       </ion-select>
@@ -36,9 +36,9 @@
     <ion-item *ngIf="datoVacio(incidencia['cn_id_prioridad'])">
       <ion-label>Prioridad</ion-label>
       <ion-select formControlName="cn_id_prioridad" placeholder="Selecciona la prioridad">
-        <ion-select-option value="bajo">Bajo</ion-select-option>
-        <ion-select-option value="medio">Medio</ion-select-option>
-        <ion-select-option value="alto">Alto </ion-select-option>
+        <ion-select-option value="0">Bajo</ion-select-option>
+        <ion-select-option value="1">Medio</ion-select-option>
+        <ion-select-option value="2">Alto </ion-select-option>
       </ion-select>
     </ion-item>
 
@@ -55,7 +55,7 @@
     </ion-item>
 
     <!-- Botón -->
-    <ion-button class="submit" type="submit" mode="ios" [disabled]="form.invalid">
+    <ion-button *ngIf="tecnicos.length != 0" class="submit" type="submit" mode="ios" [disabled]="form.invalid">
       Asignar incidencia
       <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
     </ion-button>
