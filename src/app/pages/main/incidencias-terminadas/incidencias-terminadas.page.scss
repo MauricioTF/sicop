@@ -1,0 +1,33 @@
+ion-item-option.custom-red {
+    --background: red;
+    --color: white;
+  }
+
+  ion-item-option.custom-green {
+    --background: #1BA72C;
+    color: white; 
+}
+
+  .icon-text {
+    // position: absolute;
+    // top: 50%;
+    // left: 50%;
+    // // transform: translate(-50%, -50%);
+    // font-family: Arial, sans-serif; 
+    // font-size: 24px;
+    // font-weight: bold;
+    // color: white;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    // pointer-events: none;
+
+    position: absolute;
+    font-family: Arial, sans-serif;
+    font-size: 24px; 
+    font-weight: bold;
+    color: white; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

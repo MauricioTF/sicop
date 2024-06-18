@@ -143,9 +143,7 @@ async getIncidencias() {
     // para que cargue automaticamente los incidentes agregados
     if (modal) this.getIncidencias();
   }
-  // Al asignar tecnico debe agregar prioridad, riesgo, afectación y categoría
   
-
   // El supervisor hacer cierre de incidencias ///////////////////////////
 
 }

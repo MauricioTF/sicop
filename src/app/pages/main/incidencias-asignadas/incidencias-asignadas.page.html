@@ -36,22 +36,24 @@
 
       <ion-item-options>
         <!-- boton para asignar incidencia -->
+         
         <ion-item-option 
         *ngIf="!showBtn && incidencia.cn_id_estado != 3" 
         (click)="setEstadoEnRevision(incidencia)" 
         class="custom-orange"
       >
-        <ion-icon class="option-btn p-icon"></ion-icon>
-      </ion-item-option>
+      <ion-icon name="alert-circle" slot="icon-only"></ion-icon>
+    </ion-item-option>
       
         
         <ion-item-option
           *ngIf="incidencia.cn_id_estado != 2"
           (click)="addDiagnostico(null, incidencia)"
-          class="custom-green"
+          class="custom-blue"
         >
-          <ion-icon class="option-btn d-icon"></ion-icon>
-        </ion-item-option>
+        <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+
+         </ion-item-option>
 
 
       </ion-item-options>

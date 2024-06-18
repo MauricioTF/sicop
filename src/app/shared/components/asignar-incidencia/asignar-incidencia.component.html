@@ -12,6 +12,7 @@
       </ion-select>
     </ion-item>
     <div *ngIf="tecnicos.length === 0"> Esta incidencia fue asignada a todos los tecnicos disponibles</div>
+    
     <!-- afectacion -->
     <ion-item *ngIf="datoVacio(incidencia['cn_id_afectacion'])">
       <ion-label>Afectación</ion-label>

@@ -24,7 +24,7 @@ import {
   ref,
   uploadString,
 } from 'firebase/storage';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Rol } from '../models/rol.model';
 import { Diagnostico } from '../models/diagnostico.model';
 import { Asignaciones } from '../models/asignaciones.model';
@@ -227,5 +227,10 @@ export class FirebaseService {
         .doc(id)
         .update(fieldsToUpdate);
     }
+
+    // Método para eliminar un documento
+    eliminaRegistro(id: string, idUsuario: string): Promise<void> {
+    return this.firestore.collection(`/t_asignacion_incidencia/${idUsuario}/t_asignacion_incidencia`).doc(id).delete();
+  }
     
 }
