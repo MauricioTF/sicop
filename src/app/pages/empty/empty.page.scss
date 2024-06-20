@@ -1,0 +1,19 @@
+ion-content{
+    --ion-background-color: url('../../../assets/logo_sgi.png') no-repeat center center fixed;
+
+}
+
+.d-flex-center{
+    height: 90vh;
+}
+
+.glass{
+    /* From https://css.glass */
+background: rgba(64, 163, 243, 0.41);
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(2.1px);
+-webkit-backdrop-filter: blur(2.1px);
+border: 1px solid rgba(64, 163, 243, 0.18);
+width: 100%;
+min-height: 100vh;
+}

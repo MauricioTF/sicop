@@ -60,8 +60,8 @@ export class AuthPage implements OnInit {
           if (user) {
             this.utilService.saveLocalStorage('user', user);
             setTimeout(() => {
-              this.router.navigateByUrl('main/home');
-            }, 1800);
+              this.router.navigateByUrl('/empty');
+            }, 500);
             // this.router.navigateByUrl('main/home').then(() => {
               // Recargar la página de inicio
               // this.location.go(this.location.path());
@@ -69,14 +69,14 @@ export class AuthPage implements OnInit {
             // });
             this.form.reset();
 
-            this.utilService.presentToast({
-              message: `Bienvenido ${user.ct_nombre}`,
-              duration: 1500,
-              color: 'primary',
-              position: 'bottom',
-              icon: 'person-circle-outline'
+            // this.utilService.presentToast({
+            //   message: `Bienvenido ${user.ct_nombre}`,
+            //   duration: 1500,
+            //   color: 'primary',
+            //   position: 'bottom',
+            //   icon: 'person-circle-outline'
               
-            });
+            // });
           
           } else {
             throw new Error('Los datos del usuario no están definidos.');
