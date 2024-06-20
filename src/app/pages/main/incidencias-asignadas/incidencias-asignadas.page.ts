@@ -1,5 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { map } from 'rxjs';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil, map } from 'rxjs/operators';
 import { Asignaciones } from 'src/app/models/asignaciones.model';
 import { Diagnostico } from 'src/app/models/diagnostico.model';
 import { Incidencia } from 'src/app/models/incidencia.model';
@@ -12,43 +13,43 @@ import { DiagnosticoIncidenciaComponent } from 'src/app/shared/components/diagno
   templateUrl: './incidencias-asignadas.page.html',
   styleUrls: ['./incidencias-asignadas.page.scss'],
 })
-export class IncidenciasAsignadasPage implements OnInit {
-  // Inyección de servicios y definición de variables
+export class IncidenciasAsignadasPage implements OnInit, OnDestroy {
   utilService = inject(UtilsService);
   firebaseService = inject(FirebaseService);
   loading: boolean = false;
   asignaciones: Asignaciones[] = [];
   incidencia: Incidencia[] = [];
   idUsuarios: any;
-
   sepcificAsignation: any;
   showBtn: boolean = false;
+  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  // Método que se ejecuta cuando la vista está a punto de entrar y volverse la vista activa
   ionViewWillEnter() {
     this.getIncidenciasAsignadas();
   }
 
-  // Método para obtener los datos del usuario del almacenamiento local
   getIdUsuarios(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.firebaseService.getTecnicos().subscribe(
+      this.firebaseService.getTecnicos().pipe(takeUntil(this.destroy$)).subscribe(
         (data) => {
           const usuarios = data;
           resolve(usuarios);
         },
         (error) => {
           console.error('Error al obtener roles:', error);
-          reject(error); // Rechaza la promesa en caso de error
+          reject(error);
         }
       );
     });
   }
 
-  // Método para refrescar la pantalla
   doRefresh(event: any) {
     setTimeout(() => {
       this.getIncidenciasAsignadas();
@@ -56,26 +57,19 @@ export class IncidenciasAsignadasPage implements OnInit {
     }, 1000);
   }
 
-  // Método para obtener la lista de incidencias reportadas
   async getIncidenciasAsignadas() {
     this.idUsuarios = await this.getIdUsuarios();
-    this.asignaciones = []; // Asegúrate de inicializar la lista de incidencias
-
+    this.asignaciones = [];
     this.incidencia = [];
 
-    this.firebaseService.getCurrentUser().subscribe((user) => {
+    this.firebaseService.getCurrentUser().pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user) {
-        let allAsignacion = []; // Lista para acumular todas las incidencias
-        let allA = []; // Lista para acumular todas las incidencias
-
-        let processedUsers = 0; // Contador para usuarios procesados
+        let allAsignacion = [];
+        let processedUsers = 0;
         this.loading = true;
 
         for (let i = 0; i < this.idUsuarios.length; i++) {
-          const userPath = `t_usuarios/${this.idUsuarios[i].cn_id_usuario}`; // Ruta del usuario
-          const path = `t_asignacion_incidencia/${this.idUsuarios[i].cn_id_usuario}/t_asignacion_incidencia`; // Ruta de la incidencia
-
-          this.loading = true;
+          const path = `t_asignacion_incidencia/${this.idUsuarios[i].cn_id_usuario}/t_asignacion_incidencia`;
 
           this.firebaseService
             .getCollectionDataIncidenciasAsignadas(path)
@@ -86,44 +80,28 @@ export class IncidenciasAsignadasPage implements OnInit {
                   id: c.payload.doc.id,
                   ...c.payload.doc.data(),
                 }))
-              )
+              ),
+              takeUntil(this.destroy$)
             )
             .subscribe({
               next: (resp: any) => {
-                allA = [...allA, ...resp]; // Agregar incidencias a la lista acumulada
+                allAsignacion = [...allAsignacion, ...resp];
                 processedUsers++;
-                // Verificar si todos los usuarios han sido procesados
                 if (processedUsers === this.idUsuarios.length) {
-                  allAsignacion =  allA.filter(
+                  this.asignaciones = allAsignacion.filter(
                     (incidencia) => incidencia.cn_id_usuario === user.uid
                   );
-
-                  this.asignaciones =  allAsignacion;
-            
-                  // console.log('Asignaciones asign:', this.asignaciones);
                   this.getIncidencias();
-                  
                   this.loading = false;
-                  // this.useAsignaciones(); // Llama a useAsignaciones cuando los datos estén listos
                 }
               },
               error: (error) => {
                 console.error('Error obteniendo incidencias:', error);
                 processedUsers++;
-
-                // Asegúrate de manejar el estado de carga incluso si hay errores
                 if (processedUsers === this.idUsuarios.length) {
                   this.loading = false;
                 }
               },
-            });
-          this.firebaseService
-            .getDocument(userPath)
-            .then((userData) => {
-              // Manejar otros datos del usuario aquí si es necesario
-            })
-            .catch((error) => {
-              console.error('Error obteniendo datos de usuario:', error);
             });
         }
       }
@@ -132,18 +110,15 @@ export class IncidenciasAsignadasPage implements OnInit {
 
   async getIncidencias() {
     this.idUsuarios = await this.getIdUsuarios();
-    this.incidencia = []; // Asegúrate de inicializar la lista de incidencias
+    this.incidencia = [];
 
-    this.firebaseService.getCurrentUser().subscribe((user) => {
+    this.firebaseService.getCurrentUser().pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user) {
-        let allIncidencias = []; // Lista para acumular todas las incidencias
-        let processedUsers = 0; // Contador para usuarios procesados
+        let allIncidencias = [];
+        let processedUsers = 0;
 
         for (let i = 0; i < this.idUsuarios.length; i++) {
-          const userPath = `t_usuarios/${this.idUsuarios[i].cn_id_usuario}`; // Ruta del usuario
-          const path = `t_incidencias/${this.idUsuarios[i].cn_id_usuario}/t_incidencias`; // Ruta de la incidencia
-
-          this.loading = true;
+          const path = `t_incidencias/${this.idUsuarios[i].cn_id_usuario}/t_incidencias`;
 
           this.firebaseService
             .getCollectionDataIncidenciaByPriority(path)
@@ -154,58 +129,42 @@ export class IncidenciasAsignadasPage implements OnInit {
                   id: c.payload.doc.id,
                   ...c.payload.doc.data(),
                 }))
-              )
+              ),
+              takeUntil(this.destroy$)
             )
             .subscribe({
               next: (resp: any) => {
-                allIncidencias = [...allIncidencias, ...resp]; // Agregar incidencias a la lista acumulada
+                allIncidencias = [...allIncidencias, ...resp];
                 processedUsers++;
 
-                // Verificar si todos los usuarios han sido procesados
                 if (processedUsers === this.idUsuarios.length) {
                   for (let i = 0; i < this.asignaciones.length; i++) {
                     for (let j = 0; j < allIncidencias.length; j++) {
                       if (
-                        this.asignaciones[i].cn_id_incidencia ==
-                        allIncidencias[j].id && allIncidencias[j].cn_id_estado < 4
+                        this.asignaciones[i].cn_id_incidencia === allIncidencias[j].id &&
+                        allIncidencias[j].cn_id_estado < 4
                       ) {
-
                         this.incidencia.push(allIncidencias[j]);
-
                       }
                     }
                   }
-                  // this.incidencia = allIncidencias;
                   this.loading = false;
                 }
               },
               error: (error) => {
                 console.error('Error obteniendo incidencias:', error);
                 processedUsers++;
-
-                // Asegúrate de manejar el estado de carga incluso si hay errores
                 if (processedUsers === this.idUsuarios.length) {
                   this.loading = false;
                 }
               },
-            });
-
-          this.firebaseService
-            .getDocument(userPath)
-            .then((userData) => {
-              // Manejar otros datos del usuario aquí si es necesario
-            })
-            .catch((error) => {
-              console.error('Error obteniendo datos de usuario:', error);
             });
         }
       }
     });
   }
 
-  // Método para agregar un diagnóstico
   async addDiagnostico(diagnostico?: Diagnostico, incidencia?: Incidencia) {
-
     let modal = await this.utilService.getModal({
       component: DiagnosticoIncidenciaComponent,
       cssClass: 'add-update-modal',
@@ -215,14 +174,10 @@ export class IncidenciasAsignadasPage implements OnInit {
     if (modal) this.getIncidencias();
   }
 
-  // Método para cambiar el estado de la incidencia a "En Revisión"
   async setEstadoEnRevision(incidencia: Incidencia) {
-    
-     // Cambia el estado de la incidencia al asignarla
-     await this.firebaseService.actualizaTabla(incidencia['id'], String(incidencia['cn_id_usuario']), { cn_id_estado: 3 });
- 
-      incidencia.cn_id_estado = 3; // Actualizar localmente el estado
+    await this.firebaseService.actualizaTabla(incidencia['id'], String(incidencia['cn_id_usuario']), { cn_id_estado: 3 });
 
-      return this.showBtn = true;
+    incidencia.cn_id_estado = 3;
+    this.showBtn = true;
   }
 }
