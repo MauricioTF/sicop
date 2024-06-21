@@ -1,0 +1,31 @@
+<app-headers [vb_isModal]="true" title="Agregar"></app-headers>
+
+<ion-content>
+  <div class="incidencia-container">
+    <ion-avatar class="avatar">
+      <img [src]="incidencia.ct_id_img" alt="" />
+    </ion-avatar>
+    <div class="info">
+      <div class="name">{{ incidencia.ct_titulo }}</div>
+      <div class="data">
+        <strong>Lugar:</strong> {{ incidencia.ct_lugar }} <br>
+        <strong>Descripción:</strong> {{ incidencia.ct_descripcion }} <br>
+        <strong>Fecha y hora:</strong> {{ incidencia.cf_fecha_hora }} <br>
+        <strong *ngIf="incidencia.cn_id_afectacion == 0">Afectación: Bajo</strong>
+        <strong *ngIf="incidencia.cn_id_afectacion == 1">Afectación: Medio</strong>
+        <strong *ngIf="incidencia.cn_id_afectacion == 2">Afectación: Alto</strong><br>
+        <strong>Categoría:</strong> {{ incidencia.cn_id_categoria }} <br>
+        <strong *ngIf="incidencia.cn_id_prioridad == 0">Prioridad: Bajo</strong>
+        <strong *ngIf="incidencia.cn_id_prioridad == 1">Prioridad: Medio</strong>
+        <strong *ngIf="incidencia.cn_id_prioridad == 2">Prioridad: Alto</strong><br>
+        <strong>Riesgo:</strong> {{ incidencia.cn_id_riesgo }} <br>
+
+        <strong *ngIf="incidencia.cn_id_estado == 1">Estado: Registrada</strong>
+        <strong *ngIf="incidencia.cn_id_estado == 2">Estado: Asignada</strong>
+        <strong *ngIf="incidencia.cn_id_estado == 3">Estado: En revisión</strong>
+        <strong *ngIf="incidencia.cn_id_estado == 4">Estado: Terminada</strong>
+        <strong *ngIf="incidencia.cn_id_estado == 8">Estado: Rechazada</strong>
+      </div>
+    </div>
+  </div>
+</ion-content>

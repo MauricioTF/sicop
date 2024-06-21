@@ -7,6 +7,7 @@ import { Incidencia } from 'src/app/models/incidencia.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { DiagnosticoIncidenciaComponent } from 'src/app/shared/components/diagnostico-incidencia/diagnostico-incidencia.component';
+import { IncidenciasReportadasCompletaComponent } from 'src/app/shared/info-completa/incidencias-reportadas-completa/incidencias-reportadas-completa.component';
 
 @Component({
   selector: 'app-incidencias-asignadas',
@@ -174,6 +175,19 @@ export class IncidenciasAsignadasPage implements OnInit, OnDestroy {
     if (modal) this.getIncidencias();
   }
 
+      // Método para mostrar incidencia completa toda la info
+      async infoCompleta(incidencia?: Incidencia) {
+        let modal = await this.utilService.getModal({
+          component: IncidenciasReportadasCompletaComponent,
+          cssClass: 'add-update-modal',
+          componentProps: {incidencia}
+        });
+    
+        if (modal) {
+          this.getIncidencias(); // Actualizamos la lista de incidencias al cerrar el modal
+        }
+      }
+      
   async setEstadoEnRevision(incidencia: Incidencia) {
     await this.firebaseService.actualizaTabla(incidencia['id'], String(incidencia['cn_id_usuario']), { cn_id_estado: 3 });
 

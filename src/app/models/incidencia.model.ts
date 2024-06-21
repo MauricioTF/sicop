@@ -5,9 +5,9 @@ export interface Incidencia{
     cn_id_usuario: number,
     cn_id_estado: number,
     cn_id_afectacion: number,
-    cn_id_riesgo: number,
+    cn_id_riesgo: string,
     cn_id_prioridad: number,
-    cn_id_categoria: number,
+    cn_id_categoria: string,
     ct_id_img: string,
     ct_titulo: string,
     cf_fecha_hora: Date
@@ -17,4 +17,5 @@ export interface Incidencia{
     cn_monto: number,
     cn_tiempo_estimado: number,
     cn_numero_incidente: number,
+    cn_tecnicos : number,
 }

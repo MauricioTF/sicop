@@ -35,7 +35,11 @@ const routes: Routes = [
         loadChildren: () => import('./incidencias-terminadas/incidencias-terminadas.module').then( m => m.IncidenciasTerminadasPageModule)
       },
     ],
+  },  {
+    path: 'reporte-trabajo-categoria',
+    loadChildren: () => import('./reporte-trabajo-categoria/reporte-trabajo-categoria.module').then( m => m.ReporteTrabajoCategoriaPageModule)
   },
+
 
 ];
 

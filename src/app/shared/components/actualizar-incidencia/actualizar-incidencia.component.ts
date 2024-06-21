@@ -45,7 +45,7 @@ export class ActualizarIncidenciaComponent implements OnInit {
     cf_fecha_hora: new FormControl(null),
     cn_id_riesgo: new FormControl(null),
     cn_id_prioridad: new FormControl(null),
-    cn_id_categoria: new FormControl(null),
+    cn_id_categoria: new FormControl(""),
     ct_id_img: new FormControl('', [Validators.required]),
     ct_titulo: new FormControl('', [Validators.required]),
     ct_descripcion: new FormControl('', [Validators.required]),

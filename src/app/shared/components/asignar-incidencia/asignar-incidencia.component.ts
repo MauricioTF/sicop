@@ -49,7 +49,7 @@ export class AsignarIncidenciaComponent implements OnInit, OnDestroy {
     this.form.controls.cn_id_incidencia.setValue(this.incidencia['id']);
     this.rolesXusuario().then((tecnicos) => {
       this.tecnicos = tecnicos;
-      this.filterAssignedTechnicians();
+      this.filtraTecnicosAsignados();
     });
   }
 
@@ -175,7 +175,7 @@ export class AsignarIncidenciaComponent implements OnInit, OnDestroy {
     });
   }
 
-  filterAssignedTechnicians() {
+  filtraTecnicosAsignados() {
     for (let i = 0; i < this.u_asignaciones.length; i++) {
       for (let j = 0; j < this.tecnicos.length; j++) {
         if (this.u_asignaciones[i].cn_id_incidencia === this.incidencia['id'] && this.tecnicos[j].cn_id_usuario === this.u_asignaciones[i].cn_id_usuario) {

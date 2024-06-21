@@ -14,3 +14,10 @@ ion-item-option.custom-green {
     align-items: center;
     justify-content: center;
   }
+
+  .custom-green {
+    --background: green;
+    --background-activated: #006400; /* Un tono más oscuro de verde para el estado activado */
+    --color: white; /* Color del texto o del icono */
+  }
+  

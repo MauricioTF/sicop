@@ -102,6 +102,20 @@
         <ion-label>Incidencias finalizadas</ion-label>
       </ion-item>
     </ion-menu-toggle>
+
+       <!-- Reporte de trabajos por categoría -->
+       <ion-menu-toggle autoHide="false">
+        <ion-item
+          *ngIf="supervisor"
+          [ngClass]="{'activate': currentPath === '/main/reporte-trabajo-categoria'}"
+          [routerLink]="['/main/reporte-trabajo-categoria']"
+          routerDirection="root"
+          detail
+        >
+          <ion-icon slot="start" name="person-outline"></ion-icon>
+          <ion-label>Reporte de trabajos por categoría</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
   </ion-content>
   <!-- ------------------------------------------------------------------------------------------ -->
 

@@ -6,6 +6,7 @@ import { Incidencia } from 'src/app/models/incidencia.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AsignarIncidenciaComponent } from 'src/app/shared/components/asignar-incidencia/asignar-incidencia.component';
+import { IncidenciasReportadasCompletaComponent } from 'src/app/shared/info-completa/incidencias-reportadas-completa/incidencias-reportadas-completa.component';
 
 @Component({
   selector: 'app-incidencias-reportadas',
@@ -19,6 +20,9 @@ export class IncidenciasReportadasPage implements OnInit, OnDestroy {
   incidencia: Incidencia[] = [];
   idUsuarios: any;
   private destroy$ = new Subject<void>();  // Subject para gestionar la desuscripción
+
+  filteredIncidencias: Incidencia[] = []; // Incidencias filtradas
+  searchTerm: string = ''; // Término de búsqueda
 
   ngOnInit() {
     this.getIncidencias();  // Llamamos al método para obtener incidencias al inicializar el componente
@@ -95,6 +99,8 @@ export class IncidenciasReportadasPage implements OnInit, OnDestroy {
                 if (processedUsers === this.idUsuarios.length) {
                   // Filtramos las incidencias que no estén terminadas (estado != 5)
                   this.incidencia = allIncidencias.filter(incidencia => incidencia.cn_id_estado !== 5);
+                  this.filteredIncidencias = this.incidencia; // Mostrar todas las incidencias inicialmente
+
                   this.loading = false;
                 }
               },
@@ -132,6 +138,33 @@ export class IncidenciasReportadasPage implements OnInit, OnDestroy {
 
     if (modal) {
       this.getIncidencias(); // Actualizamos la lista de incidencias al cerrar el modal
+    }
+  }
+
+    // Método para mostrar incidencia completa toda la info
+    async infoCompleta(incidencia?: Incidencia) {
+      let modal = await this.utilService.getModal({
+        component: IncidenciasReportadasCompletaComponent,
+        cssClass: 'add-update-modal',
+        componentProps: {incidencia}
+      });
+  
+      if (modal) {
+        this.getIncidencias(); // Actualizamos la lista de incidencias al cerrar el modal
+      }
+    }
+
+   // Método para filtrar incidencias
+   filterIncidencias() {
+    if (this.searchTerm === '') {
+      this.filteredIncidencias = this.incidencia; // Mostrar todas las incidencias si el término de búsqueda está vacío
+    } else {
+      this.filteredIncidencias = this.incidencia.filter(incidencia =>
+        incidencia.ct_titulo.toLowerCase().includes(this.searchTerm.toLowerCase())
+        || incidencia.ct_lugar.toLowerCase().includes(this.searchTerm.toLowerCase())
+        || incidencia.ct_descripcion.toLowerCase().includes(this.searchTerm.toLowerCase())
+        || incidencia.cf_fecha_hora.toString().toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
     }
   }
 }

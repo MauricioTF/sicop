@@ -7,12 +7,14 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
+  <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterIncidencias()" placeholder="Buscar"></ion-searchbar>
+
   <!-- Si no está cargando el loading van a aparecer todos los datos -->
   <ion-list *ngIf="!loading">
     <!-- Para mostrar todos los item -->
     <ion-item-sliding
       class="product-item"
-      *ngFor="let incidencia of incidencia"
+      *ngFor="let incidencia of filteredIncidencias"
     >
       <ion-item>
         <ion-avatar slot="start">
@@ -38,6 +40,10 @@
 
           <ion-item-option (click)="asignarIncidencia(null,incidencia)" class="custom-blue">
             <ion-icon name="person" slot="icon-only"></ion-icon>
+          </ion-item-option>
+
+          <ion-item-option (click)="infoCompleta(incidencia)"  class="custom-green">
+            <ion-icon name="add" slot="icon-only"></ion-icon>
           </ion-item-option>
 
       </ion-item-options>

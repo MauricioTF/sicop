@@ -10,7 +10,7 @@ import { ActualizarIncidenciaComponent } from './components/actualizar-incidenci
 import { DiagnosticoIncidenciaComponent } from './components/diagnostico-incidencia/diagnostico-incidencia.component';
 import { RegistrarUsuarioComponent } from './components/registrar-usuario/registrar-usuario.component';
 import { AsignarIncidenciaComponent } from './components/asignar-incidencia/asignar-incidencia.component';
-
+import { IncidenciasReportadasCompletaComponent } from './info-completa/incidencias-reportadas-completa/incidencias-reportadas-completa.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +22,7 @@ import { AsignarIncidenciaComponent } from './components/asignar-incidencia/asig
     DiagnosticoIncidenciaComponent,
     RegistrarUsuarioComponent,
     AsignarIncidenciaComponent,
+    IncidenciasReportadasCompletaComponent,
   ],
   exports: [
     HeadersComponent,
@@ -35,6 +36,7 @@ import { AsignarIncidenciaComponent } from './components/asignar-incidencia/asig
     DiagnosticoIncidenciaComponent,
     RegistrarUsuarioComponent,
     AsignarIncidenciaComponent,
+    IncidenciasReportadasCompletaComponent,
   ],
   imports: [
     CommonModule,
