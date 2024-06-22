@@ -221,9 +221,9 @@ export class FirebaseService {
   }
 
     // Método para actualizar el estado de una incidencia
-    actualizaTabla(id: string, idUsuario: string, fieldsToUpdate: { [key: string]: any }): Promise<void> {
+    actualizaTabla(path: string, id: string, idUsuario: string, fieldsToUpdate: { [key: string]: any }): Promise<void> {
       return this.firestore
-        .collection(`/t_incidencias/${idUsuario}/t_incidencias`)
+        .collection(path+`${idUsuario}`+path)
         .doc(id)
         .update(fieldsToUpdate);
     }
@@ -233,4 +233,40 @@ export class FirebaseService {
     return this.firestore.collection(`/t_asignacion_incidencia/${idUsuario}/t_asignacion_incidencia`).doc(id).delete();
   }
     
+  async bitacoraGeneral(pantalla:string, incidencia: Incidencia, idUser : string, accion:string) {
+    let path = `t_bitacora_general/${idUser}/t_bitacora_general`;
+
+    const bitacoraGeneral = {
+      pantalla: pantalla,
+      cn_id_usuario: idUser,
+      accion: accion,
+      ct_fecha_hora: new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }),
+    };
+
+    this.addDocument(path, bitacoraGeneral)
+    .then(async (resp) => {
+    })
+    .finally(() => {
+    });
+
+  }
+
+  async bitacoraCambioEstado(incidencia: Incidencia, idUser : string, nuevo_estado:number, estado_actual: number) {
+    let path = `t_bitacora_cambio_estado/${idUser}/t_bitacora_cambio_estado`;
+
+    const cambioEstado = {
+      cn_id_incidencia: incidencia['id'],
+      cn_id_usuario: idUser,
+      estado_actual: estado_actual,
+      nuevo_estado: nuevo_estado,
+      ct_fecha_hora: new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }),
+    };
+
+    this.addDocument(path, cambioEstado)
+    .then(async (resp) => {
+    })
+    .finally(() => {
+    });
+
+  }
 }

@@ -4,6 +4,7 @@ import { takeUntil, map } from 'rxjs/operators';
 import { Asignaciones } from 'src/app/models/asignaciones.model';
 import { Diagnostico } from 'src/app/models/diagnostico.model';
 import { Incidencia } from 'src/app/models/incidencia.model';
+import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { DiagnosticoIncidenciaComponent } from 'src/app/shared/components/diagnostico-incidencia/diagnostico-incidencia.component';
@@ -189,9 +190,16 @@ export class IncidenciasAsignadasPage implements OnInit, OnDestroy {
       }
       
   async setEstadoEnRevision(incidencia: Incidencia) {
-    await this.firebaseService.actualizaTabla(incidencia['id'], String(incidencia['cn_id_usuario']), { cn_id_estado: 3 });
-
+    await this.firebaseService.actualizaTabla('/t_incidencias/',incidencia['id'], String(incidencia['cn_id_usuario']), { cn_id_estado: 3 });
+      
+      await this.firebaseService.bitacoraGeneral('Incidencias asignadas',incidencia, String(this.user().cn_id_usuario), 'Revisión de incidencia');
+      await this.firebaseService.bitacoraCambioEstado(incidencia, String(this.user().cn_id_usuario), 3,2);
     incidencia.cn_id_estado = 3;
     this.showBtn = true;
   }
+
+    // Método para obtener los datos del usuario del almacenamiento local
+    user(): User {
+      return this.utilService.getLocalStorage('user');
+    }
 }

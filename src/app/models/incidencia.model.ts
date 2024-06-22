@@ -1,7 +1,6 @@
 //exportamos nuestra interfaz
 export interface Incidencia{
     uid: string,
-    cn_id_incidencia: number,
     cn_id_usuario: number,
     cn_id_estado: number,
     cn_id_afectacion: number,
@@ -16,6 +15,5 @@ export interface Incidencia{
     ct_justificacion_cierre: string,
     cn_monto: number,
     cn_tiempo_estimado: number,
-    cn_numero_incidente: number,
     cn_tecnicos : number,
 }

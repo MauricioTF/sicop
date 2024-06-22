@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil, map } from 'rxjs/operators';
 import { Asignaciones } from 'src/app/models/asignaciones.model';
 import { Incidencia } from 'src/app/models/incidencia.model';
+import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -132,7 +133,10 @@ export class IncidenciasTerminadasPage implements OnInit, OnDestroy {
         {
           text: 'Aceptar',
           handler: async () => {
-            await this.firebaseService.actualizaTabla(incidencia['id'], String(incidencia.cn_id_usuario), { cn_id_estado: 5 });
+            await this.firebaseService.actualizaTabla('/t_incidencias/',incidencia['id'], String(incidencia.cn_id_usuario), { cn_id_estado: 5 });
+            await this.firebaseService.bitacoraGeneral('Incidencias terminadas',incidencia,String(this.user().cn_id_usuario), 'Finaliza la incidencia');
+            await this.firebaseService.bitacoraCambioEstado(incidencia, String(this.user().cn_id_usuario), 5, 4);
+         
             this.utilService.presentToast({
               message: "La incidencia ha sido finalizada exitosamente",
               duration: 2500,
@@ -162,7 +166,10 @@ export class IncidenciasTerminadasPage implements OnInit, OnDestroy {
         {
           text: 'Aceptar',
           handler: async () => {
-            await this.firebaseService.actualizaTabla(incidencia['id'], String(incidencia.cn_id_usuario), { cn_id_estado: 8 });
+            await this.firebaseService.actualizaTabla('/t_incidencias/',incidencia['id'], String(incidencia.cn_id_usuario), { cn_id_estado: 8 });
+            await this.firebaseService.bitacoraGeneral('Incidencias terminadas',incidencia,String(this.user().cn_id_usuario), 'Rechaza la incidencia');
+            await this.firebaseService.bitacoraCambioEstado(incidencia, String(this.user().cn_id_usuario), 8, 4);
+         
             this.getIncidenciasAsignadas(incidencia);
             this.utilService.presentToast({
               message: "La incidencia ha sido rechazada exitosamente",
@@ -248,4 +255,9 @@ export class IncidenciasTerminadasPage implements OnInit, OnDestroy {
       }
     });
   }
+
+    // Método para obtener los datos del usuario del almacenamiento local
+    user(): User {
+      return this.utilService.getLocalStorage('user');
+    }
 }

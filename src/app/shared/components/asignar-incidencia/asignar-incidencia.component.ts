@@ -71,14 +71,66 @@ export class AsignarIncidenciaComponent implements OnInit, OnDestroy {
         cn_id_riesgo: this.form.value.cn_id_riesgo,
       };
 
-      await this.firebaseService.actualizaTabla(this.incidencia['id'], String(this.incidencia.cn_id_usuario), incidenciaData);
+      await this.firebaseService.actualizaTabla('/t_incidencias/',this.incidencia['id'], String(this.incidencia.cn_id_usuario), incidenciaData);
+    
     }
 
     this.asignarIncidencia();
+    this.bitacoraCambioEstado();
+    this.bitacoraGeneral();
   }
 
   user(): User {
     return this.utilService.getLocalStorage('user');
+  }
+
+  async bitacoraGeneral() {
+    let path = `t_bitacora_general/${this.user().cn_id_usuario}/t_bitacora_general`;
+
+    const loading = await this.utilService.loading();
+    await loading.present();
+
+    const bitacoraGeneral = {
+      pantalla: 'Asignar Incidencia',
+      cn_id_usuario: this.form.value.cn_id_usuario,
+      accion: 'Asigna Incidencia',
+      ct_fecha_hora: new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }),
+    };
+
+    this.firebaseService
+    .addDocument(path, bitacoraGeneral)
+    .then(async (resp) => {
+      this.utilService.dismissModal({ success: true });
+    })
+    .finally(() => {
+      loading.dismiss();
+    });
+
+  }
+
+  async bitacoraCambioEstado() {
+    let path = `t_bitacora_cambio_estado/${this.user().cn_id_usuario}/t_bitacora_cambio_estado`;
+
+    const loading = await this.utilService.loading();
+    await loading.present();
+
+    const cambioEstado = {
+      cn_id_incidencia: this.form.value.cn_id_incidencia,
+      cn_id_usuario: this.form.value.cn_id_usuario,
+      estado_actual: this.incidencia.cn_id_estado,
+      nuevo_estado: 2,
+      ct_fecha_hora: new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }),
+    };
+
+    this.firebaseService
+    .addDocument(path, cambioEstado)
+    .then(async (resp) => {
+      this.utilService.dismissModal({ success: true });
+    })
+    .finally(() => {
+      loading.dismiss();
+    });
+
   }
 
   async asignarIncidencia() {
@@ -98,7 +150,7 @@ export class AsignarIncidenciaComponent implements OnInit, OnDestroy {
       .then(async (resp) => {
         this.utilService.dismissModal({ success: true });
 
-        this.firebaseService.actualizaTabla(this.incidencia['id'], String(this.incidencia.cn_id_usuario), { cn_id_estado: 2 });
+        this.firebaseService.actualizaTabla('/t_incidencias/',this.incidencia['id'], String(this.incidencia.cn_id_usuario), { cn_id_estado: 2 });
 
         this.utilService.presentToast({
           message: 'Asignación de incidencia agregada de manera exitosa',

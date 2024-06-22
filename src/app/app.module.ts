@@ -12,7 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
-import { ChartModule } from 'angular-highcharts';
+import {BaseChartDirective} from 'ng2-charts';
 
 //de la base de datos en firebase
 //para poder hacer uso de los datos en firebase
@@ -36,7 +36,7 @@ initializeApp(firebaseConfig);
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,
     HttpClientModule,
-    ChartModule,
+    BaseChartDirective,
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

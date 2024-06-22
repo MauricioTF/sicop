@@ -38,21 +38,20 @@ export class ActualizarIncidenciaComponent implements OnInit {
 
     // Definición del formulario
   form = new FormGroup({
-    cn_id_incidencia: new FormControl(1),
+
     cn_id_usuario: new FormControl(null),
-    cn_id_estado: new FormControl(null),
-    cn_id_afectacion: new FormControl(null),
+    cn_id_estado: new FormControl(0),
+    cn_id_afectacion: new FormControl(''),
     cf_fecha_hora: new FormControl(null),
-    cn_id_riesgo: new FormControl(null),
-    cn_id_prioridad: new FormControl(null),
-    cn_id_categoria: new FormControl(""),
+    cn_id_riesgo: new FormControl(''),
+    cn_id_prioridad: new FormControl(''),
+    cn_id_categoria: new FormControl(''),
     ct_id_img: new FormControl('', [Validators.required]),
     ct_titulo: new FormControl('', [Validators.required]),
     ct_descripcion: new FormControl('', [Validators.required]),
     ct_lugar: new FormControl('', [Validators.required]),
     ct_justificacion_cierre: new FormControl(''),
     cn_monto: new FormControl(null),
-    cn_numero_incidente: new FormControl(null),
   });
 
     // Método que se ejecuta al inicializar el componente
@@ -80,8 +79,33 @@ export class ActualizarIncidenciaComponent implements OnInit {
     this.form.controls.cn_id_estado.setValue(1);
 
     this.crearIncidencia();
+    this.bitacoraGeneral();
   }
   
+  async bitacoraGeneral() {
+    let path = `t_bitacora_general/${this.userId}/t_bitacora_general`;
+
+    const loading = await this.utilService.loading();
+    await loading.present();
+
+    const bitacoraGeneral = {
+      pantalla: 'Registrar Incidencia',
+      cn_id_usuario: this.form.value.cn_id_usuario,
+      accion: 'Registra Incidencia',
+      ct_fecha_hora: new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }),
+    };
+
+    this.firebaseService
+    .addDocument(path, bitacoraGeneral)
+    .then(async (resp) => {
+      this.utilService.dismissModal({ success: true });
+    })
+    .finally(() => {
+      loading.dismiss();
+    });
+
+  }
+
   // Método para crear la incidencia
  async crearIncidencia() {
   if (!this.userId) {
@@ -203,8 +227,7 @@ export class ActualizarIncidenciaComponent implements OnInit {
         
        return u_tecnios;
     }
-
-
+    
     // ////////////////////////////////////// generar el uid
   // Método para obtener el siguiente ID personalizado
   private async idIncidencia(): Promise<string> {

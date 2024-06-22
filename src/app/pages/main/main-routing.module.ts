@@ -34,11 +34,13 @@ const routes: Routes = [
         path: 'incidencias-terminadas',
         loadChildren: () => import('./incidencias-terminadas/incidencias-terminadas.module').then( m => m.IncidenciasTerminadasPageModule)
       },
+      {
+        path: 'reporte-trabajo-categoria',
+        loadChildren: () => import('./reporte-trabajo-categoria/reporte-trabajo-categoria.module').then( m => m.ReporteTrabajoCategoriaPageModule)
+      },
     ],
-  },  {
-    path: 'reporte-trabajo-categoria',
-    loadChildren: () => import('./reporte-trabajo-categoria/reporte-trabajo-categoria.module').then( m => m.ReporteTrabajoCategoriaPageModule)
   },
+
 
 
 ];
