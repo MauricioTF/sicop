@@ -48,7 +48,7 @@ export class ReporteTrabajoCategoriaPage implements OnInit, OnDestroy {
     const labels = this.filteredIncidencias.map(item => item.ct_titulo);
 
     this.chart = new Chart(ctx, {
-      type: 'doughnut', // Cambiar el tipo a 'doughnut' para gráfico de anillos
+      type: 'bar', // Cambiar el tipo a 'doughnut' para gráfico de anillos
       data: {
         labels: labels,
         datasets: [{

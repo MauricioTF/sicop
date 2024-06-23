@@ -1,0 +1,94 @@
+/* start-date.component.scss */
+.date-form {
+    padding: 16px;
+  }
+  
+  .date-item {
+    --padding-start: 0px;
+    margin-bottom: 16px;
+    border: 1px solid var(--ion-color-primary);
+    border-radius: 8px;
+    padding: 10px;
+  }
+  
+  .date-label {
+    font-weight: bold;
+    color: var(--ion-color-primary);
+  }
+  
+  .date-picker {
+    width: 100%;
+    --background: var(--ion-color-light);
+    --color: var(--ion-color-primary);
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+  }
+  
+  
+  // 
+  /* reporte-carga-trabajo.page.scss */
+
+.custom-tab-button {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-color-light);
+  --border-radius: 10px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--ion-color-primary-dark);
+  background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+}
+
+.custom-tab-button ion-icon {
+  --color: var(--ion-color-light);
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.custom-tab-button ion-label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.custom-tab-button:hover {
+  --background: var(--ion-color-primary-shade);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.custom-tab-button:active {
+  --background: var(--ion-color-primary-tint);
+  transform: scale(0.95);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+ion-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ion-avatar .empty-icon {
+  width: 100%;
+  height: 100%;
+  font-size: 100%; /* Ajusta el tamaño del ícono */
+}
+// @media (max-width: 768px) {
+//   .custom-tab-button {
+//     --padding-start: 12px;
+//     --padding-end: 12px;
+//     --padding-top: 8px;
+//     --padding-bottom: 8px;
+//     font-size: 12px;
+//   }
+
+//   .custom-tab-button ion-icon {
+//     font-size: 20px;
+//     margin-bottom: 2px;
+//   }
+// }

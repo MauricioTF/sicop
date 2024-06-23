@@ -28,10 +28,11 @@ export const firebaseConfig = {
 
 //para inicializar firebase
 initializeApp(firebaseConfig);
+
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, 
-    IonicModule.forRoot({mode: 'md'}),
+    IonicModule.forRoot({mode: 'ios'}),
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,

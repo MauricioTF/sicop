@@ -115,7 +115,35 @@
           <ion-icon slot="start" name="person-outline"></ion-icon>
           <ion-label>Reporte de trabajos por categoría</ion-label>
         </ion-item>
+     
       </ion-menu-toggle>
+
+             <!-- Reporte de carga detrabajos -->
+             <ion-menu-toggle autoHide="false">
+              <ion-item
+                *ngIf="supervisor"
+                [ngClass]="{'activate': currentPath === '/main/reporte-carga-trabajo'}"
+                [routerLink]="['/main/reporte-carga-trabajo']"
+                routerDirection="root"
+                detail
+              >
+                <ion-icon slot="start" name="person-outline"></ion-icon>
+                <ion-label>Reporte de carga de trabajos</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+             <!-- Reporte de bitacoras -->
+             <ion-menu-toggle autoHide="false">
+              <ion-item
+                *ngIf="supervisor"
+                [ngClass]="{'activate': currentPath === '/main/reporte-bitacoras'}"
+                [routerLink]="['/main/reporte-bitacoras']"
+                routerDirection="root"
+                detail
+              >
+                <ion-icon slot="start" name="person-outline"></ion-icon>
+                <ion-label>Reporte de bitacoras</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
   </ion-content>
   <!-- ------------------------------------------------------------------------------------------ -->
 

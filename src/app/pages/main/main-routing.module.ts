@@ -38,9 +38,16 @@ const routes: Routes = [
         path: 'reporte-trabajo-categoria',
         loadChildren: () => import('./reporte-trabajo-categoria/reporte-trabajo-categoria.module').then( m => m.ReporteTrabajoCategoriaPageModule)
       },
+      {
+        path: 'reporte-carga-trabajo',
+        loadChildren: () => import('./reporte-carga-trabajo/reporte-carga-trabajo.module').then( m => m.ReporteCargaTrabajoPageModule)
+      },
+      {
+        path: 'reporte-bitacoras',
+        loadChildren: () => import('./reporte-bitacoras/reporte-bitacoras.module').then( m => m.ReporteBitacorasPageModule)
+      },
     ],
   },
-
 
 
 ];

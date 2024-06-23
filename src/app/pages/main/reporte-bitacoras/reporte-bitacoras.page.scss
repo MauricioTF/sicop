@@ -1,0 +1,71 @@
+/* Estilos para el ion-item y ion-select */
+.custom-item {
+    --padding-start: 16px; /* Ajusta el padding del inicio */
+    --padding-end: 16px; /* Ajusta el padding del final */
+    --inner-padding-end: 16px; /* Ajusta el padding interno del final */
+  
+    /* Opcional: Ajusta el tamaño de la fuente y el color */
+    --ion-item-label-font-size: 16px;
+    --color: var(--ion-color-primary);
+  }
+  
+  /* Estilo para el ion-label dentro del ion-item */
+  .custom-label {
+    font-weight: bold; /* Ajusta el peso de la fuente */
+  }
+  
+  /* Estilos para el ion-select */
+  .custom-select {
+    --min-width: 200px; /* Ajusta el ancho mínimo del select */
+    --max-width: 100%; /* Ajusta el ancho máximo del select */
+    --background: var(--ion-color-light); /* Ajusta el color de fondo */
+    --border-radius: 8px; /* Ajusta el radio de borde */
+    --padding-start: 12px; /* Ajusta el padding del inicio */
+    --padding-end: 12px; /* Ajusta el padding del final */
+    --padding-top: 8px; /* Ajusta el padding superior */
+    --padding-bottom: 8px; /* Ajusta el padding inferior */
+    --border-color: var(--ion-color-primary); /* Ajusta el color del borde */
+    --color: var(--ion-color-dark); /* Ajusta el color del texto */
+  
+    /* Ajusta el tamaño de la fuente */
+    font-size: 16px;
+  
+    /* Opcional: Ajusta el color del borde en enfoque */
+    --highlight-color-focused: var(--ion-color-secondary);
+  }
+  
+  /* Estilos para el ion-item y su contenido */
+.custom-item {
+  --padding-start: 16px; /* Ajusta el padding del inicio */
+  --padding-end: 16px; /* Ajusta el padding del final */
+  --inner-padding-end: 16px; /* Ajusta el padding interno del final */
+
+  /* Opcional: Ajusta el color de fondo y el borde del ion-item */
+  --background: #f4f4f4; /* Color de fondo */
+  --border-radius: 8px; /* Radio del borde */
+  --border-color: #ccc; /* Color del borde */
+  --border-width: 1px; /* Ancho del borde */
+}
+
+/* Estilos para el ion-label dentro del ion-item */
+ion-label {
+  display: block; /* Hace que el label ocupe todo el espacio del ion-item */
+}
+
+/* Estilos para los elementos .name y .data dentro del ion-label */
+.name {
+  font-weight: bold; /* Ajusta el peso de la fuente */
+  font-size: 18px; /* Ajusta el tamaño de la fuente */
+  color: #333; /* Ajusta el color del texto */
+  margin-bottom: 8px; /* Ajusta el margen inferior */
+}
+
+.data {
+  font-size: 14px; /* Ajusta el tamaño de la fuente */
+  color: #666; /* Ajusta el color del texto */
+  line-height: 1.6; /* Ajusta la altura de línea */
+}
+
+.data strong {
+  margin-right: 5px; /* Ajusta el margen derecho de los strong */
+}
