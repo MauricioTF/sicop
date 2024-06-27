@@ -1,97 +1,71 @@
-<app-headers [vb_show_menu]="true" vt_title="Carga de trabajo">
-</app-headers>
+<app-headers [vb_show_menu]="true" vt_title="Carga de trabajo"></app-headers>
 
 <ion-content>
+  <!-- Formulario de Fechas -->
   <form [formGroup]="dateForm" class="date-form">
 
-    <ion-tab-button class="custom-tab-button"  *ngIf="openF==true || openI == false" (click)="openFechaInicio()">
+   <ion-tab-button class="custom-tab-button" *ngIf="openF==true || openI == false" (click)="openFechaInicio()">
       <ion-icon name="checkmark" slot="icon-only"></ion-icon>
       <ion-label>Fecha inicio</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button class="custom-tab-button"  *ngIf="openI==true && openF == false" (click)="openFechaFin()">
+    <ion-tab-button class="custom-tab-button" *ngIf="openI==true && openF == false" (click)="openFechaFin()">
       <ion-icon name="checkmark" slot="icon-only"></ion-icon>
       <ion-label>Fecha final</ion-label>
     </ion-tab-button>
 
     <ion-item style="margin-top: 5%;" class="date-item" *ngIf="!openF">
-      <ion-label class="date-label">Inicio</ion-label>
+      <ion-label>Fecha inicio</ion-label>
       <ion-datetime 
-        class="date-picker"
         displayFormat="DD/MM/YYYY" 
-        pickerFormat="DD MM YYYY"
+        pickerFormat="DD MM YYYY" 
         formControlName="startDate" 
         (ionChange)="validateDates()"
-        [max]="maxDate">
+        [max]="maxDate"
+        [value]="dateForm.controls['startDate'].value">
       </ion-datetime>
     </ion-item>
 
     <ion-item style="margin-top: 5%;" class="date-item" *ngIf="openF">
-      <ion-label class="date-label">Fin</ion-label>
+      <ion-label>Fecha final</ion-label>
       <ion-datetime 
-        class="date-picker"
         displayFormat="DD/MM/YYYY" 
-        pickerFormat="DD MM YYYY"
+        pickerFormat="DD MM YYYY" 
         formControlName="endDate" 
         (ionChange)="validateDates()"
-        [min]="minDate">
+        [min]="minDate"
+        [value]="dateForm.controls['endDate'].value">
       </ion-datetime>
     </ion-item>
 
-    <ion-tab-button class="custom-tab-button" (click)="validateDates()">
-      <ion-icon name="checkmark" slot="icon-only"></ion-icon>
-      <ion-label>Crear</ion-label>
-    </ion-tab-button>
+    <ion-button expand="full" (click)="getIncidencias()">Actualizar Datos</ion-button>
   </form>
-</ion-content>
 
-<ion-content>
-  <!-- ------------------------Para refrescar pantalla --------------------------------->
-  <ion-refresher slot="fixed" >
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-
-  <!-- Si no está cargando el loading van a aparecer todos los datos -->
-  <ion-list>
-    <!-- Para mostrar todos los item -->
-    <ion-item-sliding
-    class="product-item"
-
-      class="product-item"
-      
-    >
+  <!-- Lista de Técnicos -->
+  <ion-list *ngIf="tecnicos.length > 0">
+    <ion-item-sliding *ngFor="let tecnico of tecnicos">
       <ion-item>
         <ion-avatar slot="start">
           <ion-icon class="empty-icon" name="person-circle-outline"></ion-icon>
-    </ion-avatar>
-
+        </ion-avatar>
         <ion-label>
-          <div class="name">Mauricio</div>
-          <div class="data">
-            <strong>Trabajo pendiente:</strong> 2
-            <strong>Trabajo finalizado:</strong>1
-          </div>
+          <h2>{{ tecnico.nombre }}</h2>
+          <p>Trabajo pendiente: {{ tecnico.pendientes }}</p>
+          <p>Trabajo finalizado: {{ tecnico.terminadas }}</p>
         </ion-label>
       </ion-item>
-
-      <ion-item>
-        <ion-avatar slot="start">
-                <ion-icon class="empty-icon" name="person-circle-outline"></ion-icon>
-          </ion-avatar>
-        <ion-label>
-          <div class="name">Fio</div>
-          <div class="data">
-            <strong>Trabajo pendiente:</strong> 0
-            <strong>Trabajo finalizado:</strong>1
-          </div>
-        </ion-label>
-      </ion-item>
-
       <ion-item-options>
-
-
+        <!-- Opciones adicionales para cada técnico -->
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
 
+  <ion-list *ngIf="tecnicos.length === 0">
+    <ion-item>
+          <div class="empty">
+    <ion-icon name="sunny"></ion-icon>
+    <h3>No hay datos para la fecha seleccionada.</h3>
+  </div>
+    </ion-item>
+  </ion-list>
 </ion-content>

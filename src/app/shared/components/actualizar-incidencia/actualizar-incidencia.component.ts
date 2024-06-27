@@ -1,14 +1,12 @@
 // Importación de módulos y servicios necesarios
 import { Component, OnInit, inject } from '@angular/core';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Incidencia } from 'src/app/models/incidencia.model';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import firebase from 'firebase/compat';
 import { UtilsService } from 'src/app/services/utils.service';
-import { Observable, catchError, from, map, switchMap } from 'rxjs';
+
 // Decorador Component que define la configuración del componente
 @Component({
   selector: 'app-actualizar-incidencia',
@@ -41,6 +39,7 @@ export class ActualizarIncidenciaComponent implements OnInit {
 
     cn_id_usuario: new FormControl(null),
     cn_id_estado: new FormControl(0),
+    cn_tecnicos: new FormControl(0),
     cn_id_afectacion: new FormControl(''),
     cf_fecha_hora: new FormControl(null),
     cn_id_riesgo: new FormControl(''),
@@ -79,31 +78,6 @@ export class ActualizarIncidenciaComponent implements OnInit {
     this.form.controls.cn_id_estado.setValue(1);
 
     this.crearIncidencia();
-    this.bitacoraGeneral();
-  }
-  
-  async bitacoraGeneral() {
-    let path = `t_bitacora_general/${this.userId}/t_bitacora_general`;
-
-    const loading = await this.utilService.loading();
-    await loading.present();
-
-    const bitacoraGeneral = {
-      pantalla: 'Registrar Incidencia',
-      cn_id_usuario: this.form.value.cn_id_usuario,
-      accion: 'Registra Incidencia',
-      ct_fecha_hora: new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }),
-    };
-
-    this.firebaseService
-    .addDocument(path, bitacoraGeneral)
-    .then(async (resp) => {
-      this.utilService.dismissModal({ success: true });
-    })
-    .finally(() => {
-      loading.dismiss();
-    });
-
   }
 
   // Método para crear la incidencia
@@ -253,9 +227,5 @@ export class ActualizarIncidenciaComponent implements OnInit {
     return customId;
   }
   // ////////////////////////////////////////////////////////////
-}
-
-function subscribe(arg0: (response: any) => void, arg1: (error: any) => void) {
-  throw new Error('Function not implemented.');
 }
 

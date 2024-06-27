@@ -30,7 +30,7 @@ export class ReporteTrabajoCategoriaPage implements OnInit, OnDestroy {
   chart: any;
 
   ngOnInit() {
-    console.log("sel ",this.selectedCategory);
+    // console.log("sel ",this.selectedCategory);
     this.getIncidencias();
   }
 
@@ -43,7 +43,6 @@ export class ReporteTrabajoCategoriaPage implements OnInit, OnDestroy {
       this.chart.destroy();
     }
   
-
     const data = this.filteredIncidencias.map(item => item.cn_tecnicos);
     const labels = this.filteredIncidencias.map(item => item.ct_titulo);
 
@@ -180,7 +179,7 @@ export class ReporteTrabajoCategoriaPage implements OnInit, OnDestroy {
                 // Verificamos si todos los usuarios han sido procesados
                 if (processedUsers === this.idUsuarios.length) {
                   // Filtramos las incidencias que no estén terminadas (estado != 5)
-                  this.incidencia = allIncidencias.filter(incidencia => incidencia.cn_id_estado !== 5);
+                  this.incidencia = allIncidencias;
                   this.filteredIncidencias = this.incidencia; // Mostrar todas las incidencias inicialmente
                   this.generarGrafica();
                   this.loading = false;

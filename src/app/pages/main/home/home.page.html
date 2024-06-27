@@ -34,22 +34,6 @@
           </ion-label>
       </ion-item>
 
-      <ion-item-options>
-        <!-- boton para registrar diagnostico -->
-        <ion-item-option *ngIf="tecnico" (click)="addDiagnostico(null, incidencia)">
-          <ion-icon *ngIf="tecnico" class="option-btn" name="create-outline"></ion-icon>
-        </ion-item-option>
-
-        <!-- boton para asignar incidencia -->
-        <ion-item-option *ngIf="encargado" (click)="asignarIncidencia(null, incidencia)" color="tertiary">
-          <ion-icon *ngIf="encargado" class="option-btn" name="add-outline"></ion-icon>
-        </ion-item-option>
-
-      <!-- boton para algo mas -->
-        <ion-item-option *ngIf="usuario" color="danger">
-          <ion-icon *ngIf="usuario" class="option-btn" name="trash-outline"></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
 
     </ion-item-sliding>
   </ion-list>

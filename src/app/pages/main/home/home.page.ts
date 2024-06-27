@@ -6,13 +6,6 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 import { User } from 'src/app/models/user.model';
 import { Incidencia } from 'src/app/models/incidencia.model';
 import { map } from 'rxjs';
-import { Diagnostico } from 'src/app/models/diagnostico.model';
-import { DiagnosticoIncidenciaComponent } from 'src/app/shared/components/diagnostico-incidencia/diagnostico-incidencia.component';
-
-import { combineLatest } from 'rxjs';
-import { Rol } from 'src/app/models/rol.model';
-import { AsignarIncidenciaComponent } from 'src/app/shared/components/asignar-incidencia/asignar-incidencia.component';
-import { Asignaciones } from 'src/app/models/asignaciones.model';
 
 // Decorador de Componente que define metadatos para el componente
 @Component({
@@ -22,7 +15,7 @@ import { Asignaciones } from 'src/app/models/asignaciones.model';
 })
 export class HomePage implements OnInit {
 
-    // Inyección de servicios y definición de variables
+  // Inyección de servicios y definición de variables
   utilService = inject(UtilsService);
   firebaseService = inject(FirebaseService);
   userId: string | null = null;
@@ -73,22 +66,11 @@ export class HomePage implements OnInit {
       
     })
     
+    await this.firebaseService.bitacoraGeneral('Mis incidencias', incidencia, this.userId, 'Registro de incidencia');
+
       // para que cargue automaticamente los incidentes agregados
       if(modal) this.getIncidencias();
   }  
-
-    // Método para agregar un diagnóstico
-  async addDiagnostico(diagnostico?: Diagnostico, incidencia?: Incidencia){
-
-    console.log(incidencia);
-
-    let modal = await this.utilService.getModal({
-      component: DiagnosticoIncidenciaComponent,
-      cssClass: 'add-update-modal',
-      componentProps: {diagnostico, incidencia}
-    })
-
-  }
 
   // Método para obtener los datos del usuario del almacenamiento local
   user(): User {
@@ -140,36 +122,4 @@ export class HomePage implements OnInit {
     }, 1000)
   }
 
-    // Método para obtener los roles del usuario  logueado
-  async rolesXusuario(){
-
-    this.roles = await this.firebaseService.getNameRol();//obtiene los roles registrados
-    this.specificRole = await this.firebaseService.getSpecificRole(String(this.user().cn_id_usuario)); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
-
-    let arr = [];
-    for (let i = 0; i < this.specificRole.length; i++) {
-      arr.push(this.specificRole[i].cn_id_rol);
-
-      for (let j = 0; j < this.roles.length; j++) {
-        
-        if(this.specificRole[i].cn_id_rol === this.roles[j].cn_id_rol){
-          console.log("Roles del usuario logueado: ", this.roles[j].ct_descripcion);
-        }
-      }
-    }
-
-    return arr;
-  }
-  
-  // Método para asignar una incidencia
-  async asignarIncidencia(asignaciones?: Asignaciones, incidencia?: Incidencia){
-
-    console.log(incidencia);
-
-    let modal = await this.utilService.getModal({
-      component: AsignarIncidenciaComponent,
-      cssClass: 'add-update-modal',
-      componentProps: {asignaciones, incidencia}
-    })
-  }
 }

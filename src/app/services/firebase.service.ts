@@ -29,6 +29,8 @@ import { Rol } from '../models/rol.model';
 import { Diagnostico } from '../models/diagnostico.model';
 import { Asignaciones } from '../models/asignaciones.model';
 import { HttpClient } from '@angular/common/http';
+import { bitacoraCambioEstado } from '../models/bitacoraCambioEstado.model';
+import { bitacoraGeneral } from '../models/bitacoraGeneral.model';
 
 // Decorador Injectable que indica que este servicio puede ser inyectado en otros componentes y servicios
 @Injectable({
@@ -46,6 +48,8 @@ export class FirebaseService {
   dataRefDiag: AngularFirestoreCollection<Diagnostico>;
   dataIncidenciasAsignadas: AngularFirestoreCollection<Asignaciones>;
   dataUsuarios: AngularFirestoreCollection<User>;
+  dataBCE: AngularFirestoreCollection<bitacoraCambioEstado>;
+  dataG: AngularFirestoreCollection<bitacoraGeneral>;
 
   //para el envio de correos
   // http = inject(HttpClient);
@@ -115,6 +119,22 @@ export class FirebaseService {
       );
       return this.dataUsuarios;
     }
+
+        // Método para obtener los datos de una colección de Firestore
+        getCollectionDataBitacoraCE(path: any): AngularFirestoreCollection<bitacoraCambioEstado> {
+          this.dataBCE = this.firestore.collection(path, (ref) =>
+            ref.orderBy('ct_fecha_hora', 'asc')
+          );
+          return this.dataBCE;
+        }
+
+                // Método para obtener los datos de una colección de Firestore
+        getCollectionDataBitacoraG(path: any): AngularFirestoreCollection<bitacoraGeneral> {
+          this.dataG = this.firestore.collection(path, (ref) =>
+            ref.orderBy('ct_fecha_hora', 'asc')
+          );
+          return this.dataG;
+        }
     
   // Método para obtener los datos de una colección de Firestore
   getCollectionDataIncidencia(path: any): AngularFirestoreCollection<Incidencia> {

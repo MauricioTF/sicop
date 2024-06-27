@@ -3,16 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-
 import {AngularFireModule} from '@angular/fire/compat';
 import {AngularFirestoreModule} from '@angular/fire/compat/firestore';
-
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-
 import {BaseChartDirective} from 'ng2-charts';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 //de la base de datos en firebase
 //para poder hacer uso de los datos en firebase
@@ -38,6 +35,7 @@ initializeApp(firebaseConfig);
     AngularFirestoreModule,
     HttpClientModule,
     BaseChartDirective,
+    OverlayModule,
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
