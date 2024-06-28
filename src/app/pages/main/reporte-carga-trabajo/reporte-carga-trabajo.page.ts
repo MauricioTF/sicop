@@ -181,9 +181,11 @@ export class ReporteCargaTrabajoPage implements OnInit {
 
                 for (let j = 0; j < this.asignaciones.length; j++) {
                   for (let k = 0; k < allIncidencias.length; k++) {
-                    if (this.asignaciones[j].cn_id_incidencia === allIncidencias[k].id &&
-                      allIncidencias[k].cn_id_usuario === this.idUsuarios[i].cn_id_usuario
+
+                    if (this.asignaciones[j].cn_id_usuario === this.idUsuarios[i].cn_id_usuario
                     ) {
+                      console.log('asignaciones : ', allIncidencias[k].cn_id_estado);
+
                       // Filtrar incidencias por fecha
                       const incidenciaDate = new Date(allIncidencias[k].cf_fecha_hora); 
                       if (incidenciaDate >= startDate && incidenciaDate <= endDate) {
@@ -210,7 +212,7 @@ export class ReporteCargaTrabajoPage implements OnInit {
                 if (processedUsers === this.idUsuarios.length) {
                   this.tecnicos = Object.values(tecnicoIncidencias);
                   this.loading = false;
-                  console.log('tecnics : ',this.tecnicos);
+                  // console.log('tecnics : ',this.tecnicos);
                 }
               },
               error: (error) => {
