@@ -55,7 +55,6 @@ export class MainPage implements OnInit {
 
     this.specificRole = await this.firebaseService.getSpecificRole(String(this.user().cn_id_usuario)); // Llama a getSpecificRole con el cn_id_rol deseado y espera el resultado
 
-    console.log("desde main ", this.specificRole)
   for (let i = 0; i < this.specificRole.length; i++) {
     this.rolesArray.push(this.specificRole[i].cn_id_rol)
   }

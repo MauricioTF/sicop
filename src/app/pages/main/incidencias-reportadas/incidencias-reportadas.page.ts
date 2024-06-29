@@ -133,7 +133,7 @@ export class IncidenciasReportadasPage implements OnInit, OnDestroy {
     let modal = await this.utilService.getModal({
       component: AsignarIncidenciaComponent,
       cssClass: 'add-update-modal',
-      componentProps: { asignaciones, incidencia }
+      componentProps: { asignaciones, incidencia },
     });
 
     if (modal) {

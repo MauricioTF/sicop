@@ -166,8 +166,8 @@ export class IncidenciasTerminadasPage implements OnInit, OnDestroy {
         {
           text: 'Aceptar',
           handler: async () => {
-            await this.firebaseService.actualizaTabla('/t_incidencias/',incidencia['id'], String(incidencia.cn_id_usuario), { cn_id_estado: 8 });
-            this.firebaseService.actualizaTabla('/t_incidencias/', incidencia['id'], String(incidencia.cn_id_usuario), { cn_tecnicos: incidencia.cn_tecnicos-1 });
+            await this.firebaseService.actualizaTabla('/t_incidencias/',incidencia['id'], String(incidencia.cn_id_usuario), { cn_id_estado: 8 });//cambia el estado de la incidencia a rechazada
+            this.firebaseService.actualizaTabla('/t_incidencias/', incidencia['id'], String(incidencia.cn_id_usuario), { cn_tecnicos: incidencia.cn_tecnicos-1 });//resta el tecnico a sus asignaciones
             await this.firebaseService.bitacoraGeneral('Incidencias terminadas',incidencia,String(this.user().cn_id_usuario), 'Rechaza la incidencia');
             await this.firebaseService.bitacoraCambioEstado(incidencia, String(this.user().cn_id_usuario), 8, 4);
          

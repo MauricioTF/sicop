@@ -107,7 +107,7 @@ export class HomePage implements OnInit {
           
           // Si necesitas otros datos del usuario, puedes manejarlos aquí
         }).catch(error => {
-          console.error('Error obteniendo datos de usuario:', error);
+          console.error('Error obteniendo datos de usuario:');
         });
       }
     });

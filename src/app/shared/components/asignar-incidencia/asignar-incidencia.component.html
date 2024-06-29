@@ -8,6 +8,7 @@
       <ion-select formControlName="cn_id_usuario" placeholder="Selecciona un técnico">
         <ion-select-option *ngFor="let tecnico of tecnicos" [value]="tecnico.cn_id_usuario">
           {{ tecnico.ct_nombre }}
+          
         </ion-select-option>
       </ion-select>
     </ion-item>

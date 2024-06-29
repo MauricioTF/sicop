@@ -10,6 +10,7 @@ export interface User{
     ct_cedula: string,
     ct_puesto: string,
     ct_celular: string,
+    ct_correo: string,
     email: string,
     password: string
 }

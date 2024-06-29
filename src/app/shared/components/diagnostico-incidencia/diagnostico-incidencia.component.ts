@@ -60,28 +60,6 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
     this.crearDiagnostico();
   }
 
-  //   const loading = await this.utilService.loading();
-  //   await loading.present();
-
-  //   const cambioEstado = {
-  //     cn_id_incidencia: this.form.value.cn_id_incidencia,
-  //     cn_id_usuario: this.userId,
-  //     estado_actual: this.incidencia.cn_id_estado,
-  //     nuevo_estado: nuevo_estado,
-  //     ct_fecha_hora: new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }),
-  //   };
-
-  //   this.firebaseService
-  //   .addDocument(path, cambioEstado)
-  //   .then(async (resp) => {
-  //     this.utilService.dismissModal({ success: true });
-  //   })
-  //   .finally(() => {
-  //     loading.dismiss();
-  //   });
-
-  // }
-
   // Método para crear el diagnóstic
   async crearDiagnostico() {
 
@@ -116,12 +94,23 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
         .then(async (resp) => {
           this.utilService.dismissModal({ success: true });//para cerrar el modal automaticamente
   
-           // Cambia el estado de la incidencia al asignarla
-            this.firebaseService.actualizaTabla('/t_incidencias/',this.incidencia['id'], String(this.incidencia['cn_id_usuario']), { cn_id_estado: 4 });
-
             await this.firebaseService.bitacoraGeneral('Incidencias asignadas',this.incidencia, this.userId, 'Diagnostico de incidencia');
-            await this.firebaseService.bitacoraCambioEstado(this.incidencia, this.userId, 4, 3);
          
+            await this.firebaseService.bitacoraCambioEstado(
+              this.incidencia,
+              String(this.userId),
+              3,
+              2
+            );
+            
+            await this.firebaseService.actualizaTabla(
+              '/t_incidencias/',
+              this.incidencia['id'],
+              String(this.incidencia['cn_id_usuario']),
+              { cn_id_estado: 3 }
+            );
+
+
           //mensaje de exito al guardar los datos
           this.utilService.presentToast({
             message: 'Diagnostico agregado de manera exitosa',

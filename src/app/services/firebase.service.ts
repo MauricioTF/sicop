@@ -194,6 +194,7 @@ export class FirebaseService {
     return this.firestore.collection('t_usuarios').valueChanges();
   }
 
+
   getAsignaciones(uid): Observable<any[]> {
     return this.firestore
       .collection('t_asignacion_incidencia/' + uid + '/t_asignacion_incidencia')

@@ -114,6 +114,8 @@ export class ActualizarIncidenciaComponent implements OnInit {
 
     this.utilService.dismissModal({ success: true }); // Para cerrar el modal automáticamente
 
+    this.sendEmail();//envía correo a todos los encargados
+
     // Mensaje de éxito al guardar los datos
     this.utilService.presentToast({
       message: 'Incidencia agregada de manera exitosa',
@@ -178,10 +180,9 @@ export class ActualizarIncidenciaComponent implements OnInit {
       // recorremos a los roles de cada usuario
       for (let j = 0; j < this.specificRole.length; j++) {
     
-        // consultamos si el usuario tiene rol de tecnico
+        // consultamos si el usuario tiene rol de encargado
         if(this.specificRole[j].cn_id_rol === 3){
           
-          console.log("Usuario con rol de tecnico ",this.usuarios[i].ct_correo);
           this.firebaseService.sendEmail(this.usuarios[i].ct_correo, "Nueva incidencia reportada", "Hola!! "+this.usuarios[i].ct_nombre+" se ha reportado una nueva incidencia, por favor revisarla y asignarla a un tecnico si aún no lo has hecho.")
     .subscribe(
       response => {

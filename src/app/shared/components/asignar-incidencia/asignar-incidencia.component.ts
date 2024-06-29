@@ -62,6 +62,24 @@ export class AsignarIncidenciaComponent implements OnInit, OnDestroy {
     const selectedTecnicoId = this.form.get('cn_id_usuario')?.value;
     this.form.controls['cn_id_usuario'].setValue(selectedTecnicoId);
 
+    for (let i = 0; i < this.tecnicos.length; i++) {
+      console.log(selectedTecnicoId, this.tecnicos[i].cn_id_usuario);
+      if(selectedTecnicoId == this.tecnicos[i].cn_id_usuario){
+        console.log(selectedTecnicoId, '==', this.tecnicos[i].cn_id_usuario);
+
+        this.firebaseService.sendEmail(this.tecnicos[i].ct_correo, "Nueva asignación", "Hola!! "+this.tecnicos[i].ct_nombre+" Se te ha asignado una nueva asignación, esperamos puedas resolverla pronto.")
+        .subscribe(
+          response => {
+    
+          },
+          error => {
+    
+          }
+        );
+      }
+    }
+
+
     if (String(this.incidencia.cn_id_prioridad) === "" && String(this.incidencia.cn_id_afectacion) === "" &&
       String(this.incidencia.cn_id_categoria) === "" && String(this.incidencia.cn_id_riesgo) === "") {
       const incidenciaData = {
@@ -104,6 +122,7 @@ export class AsignarIncidenciaComponent implements OnInit, OnDestroy {
         this.firebaseService.actualizaTabla('/t_incidencias/',this.incidencia['id'], String(this.incidencia.cn_id_usuario), { cn_id_estado: 2 });
         this.firebaseService.actualizaTabla('/t_incidencias/',this.incidencia['id'], String(this.incidencia.cn_id_usuario), { cn_tecnicos: this.incidencia.cn_tecnicos+1 });
 
+        
         this.utilService.presentToast({
           message: 'Asignación de incidencia agregada de manera exitosa',
           duration: 1500,

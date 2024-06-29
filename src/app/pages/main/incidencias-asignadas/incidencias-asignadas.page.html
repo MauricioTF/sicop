@@ -40,7 +40,7 @@
         <!-- boton para asignar incidencia -->
          
         <ion-item-option 
-        *ngIf="!showBtn && incidencia.cn_id_estado != 3" 
+        *ngIf="!showBtn && incidencia.cn_id_estado < 3" 
         (click)="setEstadoEnRevision(incidencia)" 
         class="custom-orange"
       >
@@ -49,13 +49,22 @@
       
         
         <ion-item-option
-          *ngIf="incidencia.cn_id_estado != 2"
+          *ngIf="!btnTerminaIncidencia && incidencia.cn_id_estado === 6"
           (click)="addDiagnostico(null, incidencia)"
           class="custom-blue"
         >
         <ion-icon name="create-outline" slot="icon-only"></ion-icon>
 
          </ion-item-option>
+
+         <ion-item-option 
+         *ngIf="incidencia.cn_id_estado === 3"
+         (click)="terminaIncidencia(incidencia)"
+         class="custom-green"
+       >
+       <ion-icon name="checkmark" slot="icon-only"></ion-icon>
+
+        </ion-item-option>
 
          <ion-item-option (click)="infoCompleta(incidencia)"  class="custom-green">
           <ion-icon name="add" slot="icon-only"></ion-icon>
@@ -93,6 +102,6 @@
 
   <div class="empty" *ngIf="!loading && !incidencia.length">
     <ion-icon name="sunny"></ion-icon>
-    <h3>No hay incidencias reportadas</h3>
+    <h3>No hay incidencias asignadas</h3>
   </div>
 </ion-content>
