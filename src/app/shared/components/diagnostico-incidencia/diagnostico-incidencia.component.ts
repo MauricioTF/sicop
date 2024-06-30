@@ -1,98 +1,94 @@
 // Importación de módulos y servicios necesarios
-import { Component, Inject, Input, OnInit, inject } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Incidencia } from 'src/app/models/incidencia.model';
-import { FirebaseService } from 'src/app/services/firebase.service';
-import { UtilsService } from 'src/app/services/utils.service';
+import { Component, Inject, Input, OnInit, inject } from '@angular/core'; // Importa los decoradores y funciones necesarias de Angular
+import { FormControl, FormGroup, Validators } from '@angular/forms'; // Importa clases para manejar formularios reactivos y validaciones
+import { Incidencia } from 'src/app/models/incidencia.model'; // Importa el modelo de Incidencia
+import { FirebaseService } from 'src/app/services/firebase.service'; // Importa el servicio para interactuar con Firebase
+import { UtilsService } from 'src/app/services/utils.service'; // Importa el servicio de utilidades
 
 // Decorador Component que define la configuración del componente
 @Component({
-  selector: 'app-diagnostico-incidencia',
-  templateUrl: './diagnostico-incidencia.component.html',
-  styleUrls: ['./diagnostico-incidencia.component.scss'],
+  selector: 'app-diagnostico-incidencia', // Selector CSS para usar el componente
+  templateUrl: './diagnostico-incidencia.component.html', // Ruta del archivo de plantilla del componente
+  styleUrls: ['./diagnostico-incidencia.component.scss'], // Ruta de los estilos específicos del componente
 })
-export class DiagnosticoIncidenciaComponent implements OnInit {
+export class DiagnosticoIncidenciaComponent implements OnInit { // Define la clase del componente
    // Inyección de servicios y definición de variables
-  firebaseService = inject(FirebaseService);
-  utilService = inject(UtilsService);
+  firebaseService = inject(FirebaseService); // Inyecta el servicio FirebaseService
+  utilService = inject(UtilsService); // Inyecta el servicio UtilsService
 
-  userId: string | null = null;
+  userId: string | null = null; // Define una variable para almacenar el ID del usuario, inicialmente nula
   
-  @Input() incidencia: Incidencia;
+  @Input() incidencia: Incidencia; // Decorador Input para recibir un objeto Incidencia como entrada del componente
 
     // Definición del formulario
-  form = new FormGroup({
-    cn_id_diagnostico: new FormControl(1),
-    cn_id_usuario: new FormControl(null),
-    cn_id_incidencia: new FormControl(null),
-    cf_fecha_hora: new FormControl(null),
-    ct_descripcion: new FormControl('', [Validators.required]),
-    cn_tiempo_estimado_solucion: new FormControl('', [Validators.required]),
-    ct_observaciones: new FormControl('', [Validators.required]),
-    cn_id_img: new FormControl('', [Validators.required]),
+  form = new FormGroup({ // Crea un nuevo grupo de controles para el formulario
+    cn_id_diagnostico: new FormControl(1), // Control para el ID del diagnóstico, con valor inicial 1
+    cn_id_usuario: new FormControl(null), // Control para el ID del usuario, inicialmente nulo
+    cn_id_incidencia: new FormControl(null), // Control para el ID de la incidencia, inicialmente nulo
+    cf_fecha_hora: new FormControl(null), // Control para la fecha y hora, inicialmente nulo
+    ct_descripcion: new FormControl('', [Validators.required]), // Control para la descripción, requerido
+    cn_tiempo_estimado_solucion: new FormControl('', [Validators.required]), // Control para el tiempo estimado de solución, requerido
+    ct_observaciones: new FormControl('', [Validators.required]), // Control para las observaciones, requerido
+    cn_id_img: new FormControl('', [Validators.required]), // Control para el ID de la imagen, requerido
   });
 
     // Método que se ejecuta al inicializar el componente
   ngOnInit() {
+    this.form.controls.cn_id_incidencia.setValue(this.incidencia['id']); // Asigna el ID de la incidencia al control correspondiente
 
-    this.form.controls.cn_id_incidencia.setValue(this.incidencia['id']);
-
-    this.firebaseService.getCurrentUser().subscribe(user => {
-      if (user) {
-        this.userId = user.uid;
-        const userPath = `t_usuarios/${this.userId}`; // Asegúrate de que el path sea correcto según tu estructura de datos
+    this.firebaseService.getCurrentUser().subscribe(user => { // Obtiene el usuario actual de Firebase
+      if (user) { // Si hay un usuario
+        this.userId = user.uid; // Asigna el UID del usuario a la variable
+        const userPath = `t_usuarios/${this.userId}`; // Define el path del documento del usuario en Firebase
         
-        this.firebaseService.getDocument(userPath).then(userData => {
-          this.form.controls.cn_id_usuario.setValue(this.userId);
+        this.firebaseService.getDocument(userPath).then(userData => { // Obtiene el documento del usuario
+          this.form.controls.cn_id_usuario.setValue(this.userId); // Asigna el UID del usuario al control correspondiente
 
-        }).catch(error => {
-          console.error('Error obteniendo datos de usuario', error);
+        }).catch(error => { // En caso de error al obtener el documento
+          console.error('Error obteniendo datos de usuario', error); // Muestra el error en consola
         });
       }
     });
-
   }
 
     // Método que se ejecuta al enviar el formulario
   async submit() {
-
-    this.form.controls.cf_fecha_hora.setValue(new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }));
-    this.crearDiagnostico();
+    this.form.controls.cf_fecha_hora.setValue(new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' })); // Asigna la fecha y hora actual al control correspondiente
+    this.crearDiagnostico(); // Llama al método para crear el diagnóstico
   }
 
-  // Método para crear el diagnóstic
+  // Método para crear el diagnóstico
   async crearDiagnostico() {
-
-      if (!this.userId) {
-        console.error('El UID del usuario no está definido');
-        this.utilService.presentToast({
+      if (!this.userId) { // Si el UID del usuario no está definido
+        console.error('El UID del usuario no está definido'); // Muestra un error en consola
+        this.utilService.presentToast({ // Muestra un mensaje de error
           message: 'Error: El UID del usuario no está definido',
           duration: 2500,
           color: 'danger',
           position: 'bottom',
           icon: 'alert-circle-outline',
         });
-        return;
+        return; // Termina la ejecución del método
       }
   
-      let path = `t_diagnosticos/${this.userId}/t_diagnosticos`;
+      let path = `t_diagnosticos/${this.userId}/t_diagnosticos`; // Define el path para el documento del diagnóstico en Firebase
       
-      console.log('Path de la incidencia:', path);
+      console.log('Path de la incidencia:', path); // Muestra el path en consola
   
-      const loading = await this.utilService.loading();
-      await loading.present();
+      const loading = await this.utilService.loading(); // Muestra un indicador de carga
+      await loading.present(); // Presenta el indicador de carga
   
-      let dataUrl = this.form.value.cn_id_img;//valor de la imagen seleccionada
-      let imgPath = `${this.userId}/${Date.now()}`//path unico para la imagen
-      let imgUrl = await this.firebaseService.updateImg(imgPath, dataUrl);
+      let dataUrl = this.form.value.cn_id_img; // Obtiene el valor de la imagen seleccionada
+      let imgPath = `${this.userId}/${Date.now()}`; // Define un path único para la imagen
+      let imgUrl = await this.firebaseService.updateImg(imgPath, dataUrl); // Sube la imagen a Firebase y obtiene la URL
    
-      this.form.controls.cn_id_img.setValue(imgUrl);
+      this.form.controls.cn_id_img.setValue(imgUrl); // Asigna la URL de la imagen al control correspondiente
       //delete this.form.value.cn_id_incidencia; // Elimina el id y toma el uid creado
     
       this.firebaseService
-        .addDocument(path, this.form.value)
+        .addDocument(path, this.form.value) // Agrega el documento del diagnóstico a Firebase
         .then(async (resp) => {
-          this.utilService.dismissModal({ success: true });//para cerrar el modal automaticamente
+          this.utilService.dismissModal({ success: true }); // Cierra el modal automáticamente
   
             await this.firebaseService.bitacoraGeneral('Incidencias asignadas',this.incidencia, this.userId, 'Diagnostico de incidencia');
          
@@ -111,7 +107,7 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
             );
 
 
-          //mensaje de exito al guardar los datos
+          // Mensaje de éxito al guardar los datos
           this.utilService.presentToast({
             message: 'Diagnostico agregado de manera exitosa',
             duration: 1500,
@@ -120,10 +116,10 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
             icon: 'checkmark-circle-outline',
           });
         })
-        //mensaje de error al guardar los datos
+        // Mensaje de error al guardar los datos
         .catch((error) => {
-          console.error('Error al agregar el diagnostico:', error);
-          this.utilService.presentToast({
+          console.error('Error al agregar el diagnostico:', error); // Muestra el error en consola
+          this.utilService.presentToast({ // Muestra un mensaje de error
             message: error.message,
             duration: 2500,
             color: 'danger',
@@ -132,7 +128,7 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
           });
         })
         .finally(() => {
-          loading.dismiss();
+          loading.dismiss(); // Oculta el indicador de carga
         });
     }
 
@@ -140,7 +136,7 @@ export class DiagnosticoIncidenciaComponent implements OnInit {
   async takeImage() {
     const dataUrl = (
       await this.utilService.takePicture('Foto para el diagnostico')
-    ).dataUrl; // Extrae la respuesta que se selecciona
-    this.form.controls.cn_id_img.setValue(dataUrl);
+    ).dataUrl; // Obtiene la URL de la imagen seleccionada
+    this.form.controls.cn_id_img.setValue(dataUrl); // Asigna la URL de la imagen al control correspondiente
   }
 }

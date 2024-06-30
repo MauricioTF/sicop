@@ -1,68 +1,66 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { Chart, registerables } from 'chart.js';
-import { Subject } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
-import { Incidencia } from 'src/app/models/incidencia.model';
-import { FirebaseService } from 'src/app/services/firebase.service';
-import { UtilsService } from 'src/app/services/utils.service';
-Chart.register(...registerables);
+// Importación de módulos y librerías necesarias
+import { Component, OnInit, OnDestroy, inject } from '@angular/core'; // Importa decoradores y funciones de Angular
+import { Chart, registerables } from 'chart.js'; // Importa funcionalidades de Chart.js para gráficos
+import { Subject } from 'rxjs'; // Importa Subject de RxJS para manejo de eventos y desuscripción
+import { takeUntil, map } from 'rxjs/operators'; // Importa operadores de RxJS para transformación y control de flujo
+import { Incidencia } from 'src/app/models/incidencia.model'; // Importa el modelo de Incidencia
+import { FirebaseService } from 'src/app/services/firebase.service'; // Importa el servicio de Firebase
+import { UtilsService } from 'src/app/services/utils.service'; // Importa el servicio de utilidades
+Chart.register(...registerables); // Registra todos los elementos necesarios de Chart.js
 
+// Decorador que define el componente, su selector, plantilla y estilos asociados
 @Component({
-  selector: 'app-reporte-trabajo-categoria',
-  templateUrl: './reporte-trabajo-categoria.page.html',
-  styleUrls: ['./reporte-trabajo-categoria.page.scss'],
+  selector: 'app-reporte-trabajo-categoria', // Selector CSS para usar el componente
+  templateUrl: './reporte-trabajo-categoria.page.html', // Ruta al archivo de plantilla
+  styleUrls: ['./reporte-trabajo-categoria.page.scss'], // Ruta a los estilos específicos del componente
 })
-export class ReporteTrabajoCategoriaPage implements OnInit, OnDestroy {
+export class ReporteTrabajoCategoriaPage implements OnInit, OnDestroy { // Clase del componente con interfaces para ciclo de vida
 
-  utilService = inject(UtilsService);
-  firebaseService = inject(FirebaseService);
-  loading: boolean = false;
-  incidencia: Incidencia[] = [];
-  idUsuarios: any;
-  private destroy$ = new Subject<void>();  // Subject para gestionar la desuscripción
+  utilService = inject(UtilsService); // Inyección del servicio de utilidades
+  firebaseService = inject(FirebaseService); // Inyección del servicio de Firebase
+  loading: boolean = false; // Indicador de carga
+  incidencia: Incidencia[] = []; // Array para almacenar incidencias
+  idUsuarios: any; // Variable para almacenar IDs de usuarios
+  private destroy$ = new Subject<void>();  // Subject para controlar la desuscripción de observables
 
-  filteredIncidencias: Incidencia[] = []; // Incidencias filtradas
+  filteredIncidencias: Incidencia[] = []; // Array para incidencias filtradas
   searchTerm: string = ''; // Término de búsqueda
-  // chart: Chart | null = null;
-
-  categorias: string[] = ['Reparacion', 'Causa_natural', 'Atencion_mobiliario']; // Opciones preestablecidas para el ion-select
-  selectedCategory: string = ''; // Categoría seleccionada por defecto
-  chart: any;
+  categorias: string[] = ['Reparacion', 'Causa_natural', 'Atencion_mobiliario']; // Categorías predefinidas
+  selectedCategory: string = ''; // Categoría seleccionada
+  chart: any; // Variable para almacenar el gráfico
 
   ngOnInit() {
-    // console.log("sel ",this.selectedCategory);
-    this.getIncidencias();
+    this.getIncidencias(); // Método para obtener incidencias al iniciar
   }
 
-  generarGrafica() {
-    const canvas = document.getElementById('myChart') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d');
+  generarGrafica() { // Método para generar la gráfica
+    const canvas = document.getElementById('myChart') as HTMLCanvasElement; // Obtiene el canvas del DOM
+    const ctx = canvas.getContext('2d'); // Obtiene el contexto 2D del canvas
   
-    // Destruir el gráfico existente antes de crear uno nuevo
-    if (this.chart) {
+    if (this.chart) { // Destruye el gráfico existente si hay alguno
       this.chart.destroy();
     }
   
-    const data = this.filteredIncidencias.map(item => item.cn_tecnicos);
-    const labels = this.filteredIncidencias.map(item => item.ct_titulo);
+    const data = this.filteredIncidencias.map(item => item.cn_tecnicos); // Datos para el gráfico
+    const labels = this.filteredIncidencias.map(item => item.ct_titulo); // Etiquetas para el gráfico
 
+    // Creación del gráfico con Chart.js
     this.chart = new Chart(ctx, {
-      type: 'bar', // Cambiar el tipo a 'doughnut' para gráfico de anillos
-      data: {
+      type: 'bar', // Tipo de gráfico
+      data: { // Datos del gráfico
         labels: labels,
         datasets: [{
           label: 'Cantidad de técnicos asignados',
           data: data,
-          backgroundColor: [
+          backgroundColor: [ // Colores de fondo
             'rgba(255, 99, 132, 0.6)',
             'rgba(54, 162, 235, 0.6)',
             'rgba(255, 206, 86, 0.6)',
             'rgba(75, 192, 192, 0.6)',
             'rgba(153, 102, 255, 0.6)',
             'rgba(255, 159, 64, 0.6)'
-            // Puedes añadir más colores si tienes más categorías
           ],
-          borderColor: [
+          borderColor: [ // Colores de borde
             'rgba(255, 99, 132, 1)',
             'rgba(54, 162, 235, 1)',
             'rgba(255, 206, 86, 1)',
@@ -70,18 +68,18 @@ export class ReporteTrabajoCategoriaPage implements OnInit, OnDestroy {
             'rgba(153, 102, 255, 1)',
             'rgba(255, 159, 64, 1)'
           ],
-          borderWidth: 1
+          borderWidth: 1 // Ancho del borde
         }]
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
+      options: { // Opciones del gráfico
+        responsive: true, // Hace el gráfico responsivo
+        plugins: { // Configuración de plugins
+          legend: { // Leyenda
+            position: 'top', // Posición de la leyenda
           },
-          tooltip: {
-            callbacks: {
-              label: (tooltipItem: any) => {
+          tooltip: { // Configuración de tooltips
+            callbacks: { // Callbacks para personalizar los tooltips
+              label: (tooltipItem: any) => { // Personaliza la etiqueta
                 let label = tooltipItem.label || '';
   
                 if (tooltipItem.raw) {
@@ -90,37 +88,29 @@ export class ReporteTrabajoCategoriaPage implements OnInit, OnDestroy {
   
                 return label;
               },
-              // Personaliza el texto del título del tooltip
-              title: (tooltipItems: any) => {
-                // Puedes personalizar el título aquí
+              title: (tooltipItems: any) => { // Personaliza el título
                 return `Detalle`;
               },
-              // Personaliza el cuerpo del tooltip
-              afterLabel: (tooltipItem: any) => {
-                // Puedes agregar información adicional después del cuerpo principal aquí
+              afterLabel: (tooltipItem: any) => { // Texto después de la etiqueta
                 return `Más detalles`;
               }
             }
           }
         }
       }
-    
     });
   }
-  
 
-  ionViewWillEnter() {
-    this.getIncidencias();  // Llamamos al método para obtener incidencias cuando la vista está a punto de entrar
+  ionViewWillEnter() { // Método del ciclo de vida de Ionic, se ejecuta cuando la vista está por entrar
+    this.getIncidencias(); // Llama al método para obtener incidencias
   }
 
-  // Método que se ejecuta cuando el componente se destruye
-  ngOnDestroy() {
-    this.destroy$.next();   // Emitimos un valor para desuscribirnos de las subscripciones
-    this.destroy$.complete(); // Completamos el Subject
+  ngOnDestroy() { // Método del ciclo de vida de Angular, se ejecuta al destruir el componente
+    this.destroy$.next(); // Emite un valor para desuscribirse
+    this.destroy$.complete(); // Completa el Subject
   }
 
-  // Método para obtener los usuarios del servicio Firebase
-  getIdUsuarios(): Promise<any> {
+  getIdUsuarios(): Promise<any> { // Método para obtener IDs de usuarios
     return new Promise((resolve, reject) => {
       this.firebaseService.getTecnicos().pipe(takeUntil(this.destroy$)).subscribe(
         (data) => {
@@ -135,29 +125,27 @@ export class ReporteTrabajoCategoriaPage implements OnInit, OnDestroy {
     });
   }
 
-  // Método para refrescar la lista de incidencias
-  doRefresh(event: any) {
+  doRefresh(event: any) { // Método para refrescar la lista de incidencias
     setTimeout(() => {
       this.getIncidencias();
       event.target.complete();
     }, 1000);
   }
 
-  // Método para obtener las incidencias reportadas
-  async getIncidencias() {
+  async getIncidencias() { // Método asincrónico para obtener incidencias
     this.idUsuarios = await this.getIdUsuarios();
-    this.incidencia = []; // Limpiamos la lista de incidencias antes de actualizar
+    this.incidencia = []; // Limpia la lista de incidencias
 
     this.firebaseService.getCurrentUser().pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user) {
-        let allIncidencias = []; // Lista para acumular todas las incidencias
-        let processedUsers = 0; // Contador para usuarios procesados
+        let allIncidencias = []; // Lista para acumular incidencias
+        let processedUsers = 0; // Contador de usuarios procesados
 
         for (let i = 0; i < this.idUsuarios.length; i++) {
-          const userPath = `t_usuarios/${this.idUsuarios[i].cn_id_usuario}`; // Ruta del usuario
-          const path = `t_incidencias/${this.idUsuarios[i].cn_id_usuario}/t_incidencias`; // Ruta de la incidencia
+          const userPath = `t_usuarios/${this.idUsuarios[i].cn_id_usuario}`; // Ruta del usuario en Firebase
+          const path = `t_incidencias/${this.idUsuarios[i].cn_id_usuario}/t_incidencias`; // Ruta de incidencias en Firebase
 
-          this.loading = true;
+          this.loading = true; // Indica que se está cargando
 
           this.firebaseService
             .getCollectionDataIncidencia(path)
@@ -173,25 +161,22 @@ export class ReporteTrabajoCategoriaPage implements OnInit, OnDestroy {
             )
             .subscribe({
               next: (resp: any) => {
-                allIncidencias = [...allIncidencias, ...resp]; // Agregamos incidencias a la lista acumulada
-                processedUsers++;
+                allIncidencias = [...allIncidencias, ...resp]; // Agrega incidencias a la lista acumulada
+                processedUsers++; // Incrementa el contador de usuarios procesados
 
-                // Verificamos si todos los usuarios han sido procesados
-                if (processedUsers === this.idUsuarios.length) {
-                  // Filtramos las incidencias que no estén terminadas (estado != 5)
-                  this.incidencia = allIncidencias;
-                  this.filteredIncidencias = this.incidencia; // Mostrar todas las incidencias inicialmente
-                  this.generarGrafica();
-                  this.loading = false;
+                if (processedUsers === this.idUsuarios.length) { // Verifica si todos los usuarios han sido procesados
+                  this.incidencia = allIncidencias; // Actualiza la lista de incidencias
+                  this.filteredIncidencias = this.incidencia; // Actualiza las incidencias filtradas
+                  this.generarGrafica(); // Genera la gráfica
+                  this.loading = false; // Indica que ha terminado de cargar
                 }
               },
               error: (error) => {
                 console.error('Error obteniendo incidencias:', error);
-                processedUsers++;
+                processedUsers++; // Incrementa el contador de usuarios procesados
 
-                // Manejamos el estado de carga en caso de errores
-                if (processedUsers === this.idUsuarios.length) {
-                  this.loading = false;
+                if (processedUsers === this.idUsuarios.length) { // Verifica si todos los usuarios han sido procesados
+                  this.loading = false; // Indica que ha terminado de cargar
                 }
               }
             });
@@ -199,7 +184,6 @@ export class ReporteTrabajoCategoriaPage implements OnInit, OnDestroy {
           this.firebaseService
             .getDocument(userPath)
             .then((userData) => {
-              // Manejamos otros datos del usuario aquí si es necesario
             })
             .catch((error) => {
               console.error('Error obteniendo datos de usuario:', error);
@@ -209,16 +193,15 @@ export class ReporteTrabajoCategoriaPage implements OnInit, OnDestroy {
     });
   }
 
-  // Método para filtrar incidencias
-  filterIncidencias() {
+  filterIncidencias() { // Método para filtrar incidencias
     if (this.selectedCategory === '') {
-      this.filteredIncidencias = this.incidencia; // Mostrar todas las incidencias si el término de búsqueda está vacío
+      this.filteredIncidencias = this.incidencia; // Muestra todas las incidencias si no hay categoría seleccionada
     } else {
       this.filteredIncidencias = this.incidencia.filter(incidencia =>
         incidencia.cn_id_categoria.toLowerCase().includes(this.selectedCategory.toLowerCase())
       );
     }
-    this.generarGrafica(); // Actualizar la gráfica después de filtrar
+    this.generarGrafica(); // Actualiza la gráfica después de filtrar
   }
 
 }

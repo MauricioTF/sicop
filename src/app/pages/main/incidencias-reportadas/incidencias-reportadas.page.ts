@@ -1,41 +1,54 @@
+// Importa el decorador Component y las interfaces OnInit y OnDestroy de Angular Core para la gestión del ciclo de vida del componente
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+// Importa Subject de la librería RxJS para la creación de observables
 import { Subject } from 'rxjs';
+// Importa operadores takeUntil y map de RxJS para controlar la suscripción a observables y transformar los datos recibidos
 import { takeUntil, map } from 'rxjs/operators';
+// Importa el modelo Asignaciones desde la carpeta de modelos
 import { Asignaciones } from 'src/app/models/asignaciones.model';
+// Importa el modelo Incidencia desde la carpeta de modelos
 import { Incidencia } from 'src/app/models/incidencia.model';
+// Importa FirebaseService desde la carpeta de servicios
 import { FirebaseService } from 'src/app/services/firebase.service';
+// Importa UtilsService desde la carpeta de servicios
 import { UtilsService } from 'src/app/services/utils.service';
+// Importa AsignarIncidenciaComponent desde la carpeta de componentes compartidos
 import { AsignarIncidenciaComponent } from 'src/app/shared/components/asignar-incidencia/asignar-incidencia.component';
+// Importa IncidenciasReportadasCompletaComponent desde la carpeta de información completa de incidencias reportadas
 import { IncidenciasReportadasCompletaComponent } from 'src/app/shared/info-completa/incidencias-reportadas-completa/incidencias-reportadas-completa.component';
 
+// Decorador que define el componente, su selector, la ruta del archivo de plantilla y la ruta del archivo de estilos
 @Component({
-  selector: 'app-incidencias-reportadas',
-  templateUrl: './incidencias-reportadas.page.html',
-  styleUrls: ['./incidencias-reportadas.page.scss'],
+  selector: 'app-incidencias-reportadas', // Selector del componente
+  templateUrl: './incidencias-reportadas.page.html', // Ruta del archivo de plantilla
+  styleUrls: ['./incidencias-reportadas.page.scss'], // Ruta del archivo de estilos
 })
+// Clase del componente que implementa las interfaces OnInit y OnDestroy para la gestión del ciclo de vida
 export class IncidenciasReportadasPage implements OnInit, OnDestroy {
-  utilService = inject(UtilsService);
-  firebaseService = inject(FirebaseService);
-  loading: boolean = false;
-  incidencia: Incidencia[] = [];
-  idUsuarios: any;
-  private destroy$ = new Subject<void>();  // Subject para gestionar la desuscripción
+  utilService = inject(UtilsService); // Inyecta el servicio UtilsService
+  firebaseService = inject(FirebaseService); // Inyecta el servicio FirebaseService
+  loading: boolean = false; // Variable para controlar la visualización del indicador de carga
+  incidencia: Incidencia[] = []; // Array para almacenar las incidencias
+  idUsuarios: any; // Variable para almacenar los IDs de los usuarios
+  private destroy$ = new Subject<void>();  // Subject para gestionar la desuscripción de observables
 
-  filteredIncidencias: Incidencia[] = []; // Incidencias filtradas
-  searchTerm: string = ''; // Término de búsqueda
+  filteredIncidencias: Incidencia[] = []; // Array para almacenar las incidencias filtradas
+  searchTerm: string = ''; // Variable para almacenar el término de búsqueda
 
+  // Método que se ejecuta al inicializar el componente
   ngOnInit() {
-    this.getIncidencias();  // Llamamos al método para obtener incidencias al inicializar el componente
+    this.getIncidencias();  // Llama al método para obtener las incidencias
   }
 
+  // Método que se ejecuta cuando la vista está a punto de entrar
   ionViewWillEnter() {
-    this.getIncidencias();  // Llamamos al método para obtener incidencias cuando la vista está a punto de entrar
+    this.getIncidencias();  // Llama al método para obtener las incidencias
   }
 
   // Método que se ejecuta cuando el componente se destruye
   ngOnDestroy() {
-    this.destroy$.next();   // Emitimos un valor para desuscribirnos de las subscripciones
-    this.destroy$.complete(); // Completamos el Subject
+    this.destroy$.next();   // Emite un valor para desuscribirse de las subscripciones
+    this.destroy$.complete(); // Completa el Subject
   }
 
   // Método para obtener los usuarios del servicio Firebase
@@ -65,7 +78,7 @@ export class IncidenciasReportadasPage implements OnInit, OnDestroy {
   // Método para obtener las incidencias reportadas
   async getIncidencias() {
     this.idUsuarios = await this.getIdUsuarios();
-    this.incidencia = []; // Limpiamos la lista de incidencias antes de actualizar
+    this.incidencia = []; // Limpia la lista de incidencias antes de actualizar
 
     this.firebaseService.getCurrentUser().pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user) {
@@ -92,14 +105,14 @@ export class IncidenciasReportadasPage implements OnInit, OnDestroy {
             )
             .subscribe({
               next: (resp: any) => {
-                allIncidencias = [...allIncidencias, ...resp]; // Agregamos incidencias a la lista acumulada
+                allIncidencias = [...allIncidencias, ...resp]; // Agrega incidencias a la lista acumulada
                 processedUsers++;
 
-                // Verificamos si todos los usuarios han sido procesados
+                // Verifica si todos los usuarios han sido procesados
                 if (processedUsers === this.idUsuarios.length) {
-                  // Filtramos las incidencias que no estén terminadas (estado != 5)
+                  // Filtra las incidencias que no estén terminadas (estado != 5)
                   this.incidencia = allIncidencias.filter(incidencia => incidencia.cn_id_estado !== 5);
-                  this.filteredIncidencias = this.incidencia; // Mostrar todas las incidencias inicialmente
+                  this.filteredIncidencias = this.incidencia; // Muestra todas las incidencias inicialmente
 
                   this.loading = false;
                 }
@@ -108,7 +121,7 @@ export class IncidenciasReportadasPage implements OnInit, OnDestroy {
                 console.error('Error obteniendo incidencias:', error);
                 processedUsers++;
 
-                // Manejamos el estado de carga en caso de errores
+                // Maneja el estado de carga en caso de errores
                 if (processedUsers === this.idUsuarios.length) {
                   this.loading = false;
                 }
@@ -118,7 +131,6 @@ export class IncidenciasReportadasPage implements OnInit, OnDestroy {
           this.firebaseService
             .getDocument(userPath)
             .then((userData) => {
-              // Manejamos otros datos del usuario aquí si es necesario
             })
             .catch((error) => {
               console.error('Error obteniendo datos de usuario:', error);
@@ -137,11 +149,11 @@ export class IncidenciasReportadasPage implements OnInit, OnDestroy {
     });
 
     if (modal) {
-      this.getIncidencias(); // Actualizamos la lista de incidencias al cerrar el modal
+      this.getIncidencias(); // Actualiza la lista de incidencias al cerrar el modal
     }
   }
 
-    // Método para mostrar incidencia completa toda la info
+    // Método para mostrar toda la información de una incidencia
     async infoCompleta(incidencia?: Incidencia) {
       let modal = await this.utilService.getModal({
         component: IncidenciasReportadasCompletaComponent,
@@ -150,14 +162,14 @@ export class IncidenciasReportadasPage implements OnInit, OnDestroy {
       });
   
       if (modal) {
-        this.getIncidencias(); // Actualizamos la lista de incidencias al cerrar el modal
+        this.getIncidencias(); // Actualiza la lista de incidencias al cerrar el modal
       }
     }
 
    // Método para filtrar incidencias
    filterIncidencias() {
     if (this.searchTerm === '') {
-      this.filteredIncidencias = this.incidencia; // Mostrar todas las incidencias si el término de búsqueda está vacío
+      this.filteredIncidencias = this.incidencia; // Muestra todas las incidencias si el término de búsqueda está vacío
     } else {
       this.filteredIncidencias = this.incidencia.filter(incidencia =>
         incidencia.ct_titulo.toLowerCase().includes(this.searchTerm.toLowerCase())

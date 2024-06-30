@@ -8,6 +8,8 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './empty.page.html',
   styleUrls: ['./empty.page.scss'],
 })
+
+//se utiliza como splash (ocupa el tiempo de carga del sistema) para mostrar otra pantalla
 export class EmptyPage implements OnInit {
 
   router = inject(Router); // Inyecta Router
@@ -30,7 +32,6 @@ export class EmptyPage implements OnInit {
       });
   }
 
-    // Método para obtener los datos del usuario del almacenamiento local
     user(): User {
       return this.utilService.getLocalStorage('user');
     }
